@@ -31,8 +31,10 @@ const cartRoute = require('./routes/cart');
 const orderRoute = require('./routes/orders');
 const storeRoute = require('./routes/store');
 const deliveryRoute = require('./routes/delivery');
+const questionsRoute = require('./routes/questions');
 
 app.use('/api/products', productsRoute);
+app.use('/api/questions', questionsRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/cart', cartRoute);
 app.use('/api/order', orderRoute);
