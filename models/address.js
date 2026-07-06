@@ -3,7 +3,7 @@ const sequelize = require('../config/db');
 
 const AddressModel = sequelize.define('Address', {
   userId: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'users', 

@@ -1,483 +1,244 @@
--- =========================================================
--- ONLINE EXAM / MOCK TEST PLATFORM DATABASE SCHEMA
--- DATABASE : PostgreSQL / MySQL Compatible Structure
--- =========================================================
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- =========================================================
--- USERS TABLE
--- Store all users/admins
--- =========================================================
-
+-------------------------------------------------
+-- USERS
+-------------------------------------------------
 CREATE TABLE users (
-    id UUID PRIMARY KEY,
-
-    email VARCHAR(150) UNIQUE NOT NULL,
-
-    phone_number VARCHAR(20),
-
+    id  PRIMARY KEY ,
     full_name VARCHAR(200) NOT NULL,
-
-    password_hash VARCHAR(255) NOT NULL,
-
-    role INT DEFAULT 1,
-    -- 1 = USER
-    -- 2 = ADMIN
-    -- 3 = SUPER_ADMIN
-
+    gender ENUM('male', 'female', 'other'),
+    image_url TEXT,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    phone_number VARCHAR(20) UNIQUE,
+    password_hash TEXT NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
-
-    subscription_id UUID,
-
-    status BOOLEAN DEFAULT TRUE,
-
+    status ENUM('active', 'inactive', 'suspended','locked') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
+CREATE TABLE roles (
+    id,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_roles (
+    id  PRIMARY KEY ,
+    user_id REFERENCES users(id) ON DELETE CASCADE,
+    role_id REFERENCES roles(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, role_id)
+);
+
+-------------------------------------------------
 -- EXAM CATEGORIES
--- Example:
--- SSC
--- Railway
--- VYAPAM
--- =========================================================
-
-CREATE TABLE exam_categories (
-    id UUID PRIMARY KEY,
-
-    name VARCHAR(150) NOT NULL,
-
-    description VARCHAR(150),
-
-    status BOOLEAN DEFAULT TRUE,
-
+-------------------------------------------------
+CREATE TABLE categories (
+    id  PRIMARY KEY DEFAULT ,
+    name VARCHAR(150) NOT NULL UNIQUE,
+    description TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
+-------------------------------------------------
 -- EXAM SUB CATEGORIES
--- Example:
--- SSC -> CGL
--- SSC -> MTS
--- VYAPAM -> SI
--- =========================================================
-
-CREATE TABLE exam_sub_categories (
-    id UUID PRIMARY KEY,
-
-    category_id UUID NOT NULL,
-
+-------------------------------------------------
+CREATE TABLE sub_categories (
+    id  PRIMARY KEY DEFAULT,
+    category_id  NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     name VARCHAR(150) NOT NULL,
-
-    description VARCHAR(150),
-
-    status BOOLEAN DEFAULT TRUE,
-
+    description TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_exam_sub_category
-        FOREIGN KEY (category_id)
-        REFERENCES exam_categories(id)
-);
-
--- =========================================================
--- SUBSCRIPTION PACKAGES
--- Example:
--- ₹100 -> 10 Tests
--- =========================================================
-
-CREATE TABLE subscription (
-    id UUID PRIMARY KEY,
-
-    name VARCHAR(150) NOT NULL,
-
-    price DECIMAL(10,2) NOT NULL,
-
-    total_test INT DEFAULT 0,
-
-    validity_days INT DEFAULT 30,
-
-    description VARCHAR(150),
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
--- USER SUBSCRIPTIONS
--- Store purchased subscription details
--- =========================================================
-
-CREATE TABLE user_subscription (
-    id UUID PRIMARY KEY,
-
-    user_id UUID NOT NULL,
-
-    subscription_id UUID NOT NULL,
-
-    test_used INT DEFAULT 0,
-
-    purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    exapiry_date TIMESTAMP,
-
-    status BOOLEAN DEFAULT TRUE,
-
+-------------------------------------------------
+-- QUESTIONS
+-------------------------------------------------
+CREATE TABLE questions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    sub_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    type SMALLINT NOT NULL, -- 1=Single, 2=Multiple
+    level SMALLINT DEFAULT 1, -- 1=Easy,2=Medium,3=Hard
+    -- explanation TEXT,
+    created_by UUID REFERENCES users(id),
+    status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_user_subscription_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id),
-
-    CONSTRAINT fk_user_subscription_package
-        FOREIGN KEY (subscription_id)
-        REFERENCES subscription(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
--- PAYMENT TABLE
--- Store payment transaction details
--- =========================================================
-
-CREATE TABLE payment (
-    id UUID PRIMARY KEY,
-
-    user_id UUID NOT NULL,
-
-    package_id UUID NOT NULL,
-
-    amount DECIMAL(10,2) NOT NULL,
-
-    payment_status INT DEFAULT 0,
-    -- 0 = Pending
-    -- 1 = Success
-    -- 2 = Failed
-
-    payment_method VARCHAR(150),
-
-    transaction_id UUID,
-
-    paid_at TIMESTAMP,
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_payment_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id),
-
-    CONSTRAINT fk_payment_package
-        FOREIGN KEY (package_id)
-        REFERENCES subscription(id)
-);
-
--- =========================================================
--- TEST TABLE
--- ONLINE / OFFLINE TESTS
--- =========================================================
-
-CREATE TABLE test (
-    id UUID PRIMARY KEY,
-
-    sub_category_id UUID NOT NULL,
-
-    title VARCHAR(150) NOT NULL,
-
-    description VARCHAR(150),
-
-    total_questions INT DEFAULT 0,
-
-    total_marks INT DEFAULT 0,
-
-    positive_marks INT DEFAULT 1,
-
-    negative_marks INT DEFAULT 0,
-
-    duration_minutes INT DEFAULT 60,
-
-    is_paid BOOLEAN DEFAULT TRUE,
-
-    paper_file_id UUID,
-
-    answer_file_id UUID,
-
-    created_by UUID,
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_test_subcategory
-        FOREIGN KEY (sub_category_id)
-        REFERENCES exam_sub_categories(id),
-
-    CONSTRAINT fk_test_created_by
-        FOREIGN KEY (created_by)
-        REFERENCES users(id)
-);
-
--- =========================================================
--- QUESTIONS TABLE
--- =========================================================
-
-CREATE TABLE question (
-    id UUID PRIMARY KEY,
-
-    sub_category_id UUID NOT NULL,
-
-    category_id UUID NOT NULL,
-
-    question_title VARCHAR(1000) NOT NULL,
-
-    question_type INT DEFAULT 1,
-    -- 1 = MCQ
-    -- 2 = TRUE_FALSE
-    -- 3 = MULTI_SELECT
-
-    question_level INT DEFAULT 1,
-    -- 1 = EASY
-    -- 2 = MEDIUM
-    -- 3 = HARD
-
-    explanation TEXT,
-
-    created_by UUID,
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_question_subcategory
-        FOREIGN KEY (sub_category_id)
-        REFERENCES exam_sub_categories(id),
-
-    CONSTRAINT fk_question_category
-        FOREIGN KEY (category_id)
-        REFERENCES exam_categories(id),
-
-    CONSTRAINT fk_question_created_by
-        FOREIGN KEY (created_by)
-        REFERENCES users(id)
-);
-
--- =========================================================
+-------------------------------------------------
 -- QUESTION OPTIONS
--- Store answer options
--- =========================================================
-
+-------------------------------------------------
 CREATE TABLE question_options (
-    id UUID PRIMARY KEY,
-
-    question_id UUID NOT NULL,
-
-    options TEXT,
-    -- Example:
-    -- ["A","B","C","D"]
-
-    ansers TEXT,
-    -- Example:
-    -- ["A"]
-
+    id  PRIMARY KEY DEFAULT ,
+    question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+    option_text TEXT NOT NULL,
     is_correct BOOLEAN DEFAULT FALSE,
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_question_options_question
-        FOREIGN KEY (question_id)
-        REFERENCES question(id)
+    -- status ENUM('active', 'inactive') DEFAULT 'active',
+    -- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
+-------------------------------------------------
+-- TESTS
+-------------------------------------------------
+CREATE TABLE practice_tests (
+    id  PRIMARY KEY DEFAULT ,
+    category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    sub_category_id UUID NOT NULL REFERENCES sub_categories(id) ON DELETE CASCADE,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    total_questions INT NOT NULL,
+    total_marks INT NOT NULL,
+    positive_marks INT DEFAULT 1,
+    negative_marks FLOAT DEFAULT 0,
+    duration_minutes INT NOT NULL,
+    is_paid BOOLEAN DEFAULT FALSE, // paid or free test
+    -- paper_file_url TEXT,
+    -- answer_file_url TEXT,
+    created_by UUID REFERENCES users(id),
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------
 -- TEST QUESTIONS MAPPING
--- Map questions to tests
--- =========================================================
-
+-------------------------------------------------
 CREATE TABLE test_questions (
-    id UUID PRIMARY KEY,
+    id  PRIMARY KEY DEFAULT,
+    practice_tests  NOT NULL REFERENCES practice_tests(id) ON DELETE CASCADE,
+    question_id  NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
 
-    question_id UUID NOT NULL,
 
-    test_id UUID NOT NULL,
-
-    question_order INT,
-
-    status BOOLEAN DEFAULT TRUE,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_test_questions_question
-        FOREIGN KEY (question_id)
-        REFERENCES question(id),
-
-    CONSTRAINT fk_test_questions_test
-        FOREIGN KEY (test_id)
-        REFERENCES test(id)
 );
 
--- =========================================================
+-------------------------------------------------
+-- SUBSCRIPTIONS
+-------------------------------------------------
+CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(150) NOT NULL,
+    price NUMERIC(10,2) NOT NULL,
+    total_test INT NOT NULL,
+    validity_days INT NOT NULL,
+    subscription_type SMALLINT DEFAULT 1, -- 1=Monthly,2=Yearly
+    description TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------
+-- USER SUBSCRIPTIONS
+-------------------------------------------------
+CREATE TABLE user_subscriptions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subscription_id UUID NOT NULL REFERENCES subscriptions(id),
+    test_used INT DEFAULT 0,
+    purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expiry_date TIMESTAMP NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------
+-- PAYMENTS
+-------------------------------------------------
+CREATE TABLE payments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subscription_id UUID NOT NULL REFERENCES subscriptions(id),
+    amount NUMERIC(10,2) NOT NULL,
+    payment_status SMALLINT DEFAULT 0, -- 0=pending,1=success,2=failed
+    payment_method VARCHAR(150),
+    transaction_id VARCHAR(255),
+    payment_gateway_response JSONB,
+    paid_at TIMESTAMP,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-------------------------------------------------
 -- TEST ATTEMPTS
--- Store user exam results
--- =========================================================
-
+-------------------------------------------------
 CREATE TABLE test_attempts (
-    id UUID PRIMARY KEY,
-
-    user_id UUID NOT NULL,
-
-    test_id UUID NOT NULL,
-
-    started_at TIMESTAMP,
-
-    submited_at TIMESTAMP,
-
-    total_ques INT,
-
-    attempted_ques TEXT,
-    -- Example:
-    -- ["q1","q2"]
-
-    correct_ans TEXT,
-
-    wrong_ans TEXT,
-
-    skipped_ans TEXT,
-
-    score INT DEFAULT 0,
-
-    accuracy INT DEFAULT 0,
-
-    percentage INT DEFAULT 0,
-
-    rank_postion INT,
-
-    time_taken TIMESTAMP,
-
-    status BOOLEAN DEFAULT TRUE,
-
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    pt_id UUID NOT NULL REFERENCES practice_tests(id) ON DELETE CASCADE,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    submitted_at TIMESTAMP,
+    total_questions INT,
+    attempted_questions INT DEFAULT 0,
+    correct_answers INT DEFAULT 0,
+    wrong_answers INT DEFAULT 0,
+    skipped_answers INT DEFAULT 0,
+    score NUMERIC(10,2),
+    accuracy NUMERIC(5,2),
+    percentage NUMERIC(5,2),
+    rank_position INT,// highest and lowest score rank position
+    time_taken INT, -- in seconds
+    status enum('in progress', 'completed') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_test_attempts_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id),
-
-    CONSTRAINT fk_test_attempts_test
-        FOREIGN KEY (test_id)
-        REFERENCES test(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
+-------------------------------------------------
 -- USER ANSWERS
--- Store selected answers
--- =========================================================
-
+-------------------------------------------------
 CREATE TABLE user_answers (
-    id UUID PRIMARY KEY,
-
-    attempt_id UUID NOT NULL,
-
-    question_id UUID NOT NULL,
-
-    option_id VARCHAR(1000),
-
-    question_type INT,
-
+    id  PRIMARY KEY DEFAULT uuid_generate_v4(),
+    attempt_id  NOT NULL REFERENCES test_attempts(id) ON DELETE CASCADE,
+    question_id  NOT NULL REFERENCES questions(id),
+    option_id  NOT NULL REFERENCES question_options(id), // flat data structure for user answers
+    question_type SMALLINT,
     is_correct BOOLEAN DEFAULT FALSE,
-
-    answered_at TIMESTAMP,
-
-    status BOOLEAN DEFAULT TRUE,
-
+    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status enum('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_user_answers_attempt
-        FOREIGN KEY (attempt_id)
-        REFERENCES test_attempts(id),
-
-    CONSTRAINT fk_user_answers_question
-        FOREIGN KEY (question_id)
-        REFERENCES question(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
--- TEST RANKING
--- Store leaderboard data
--- =========================================================
-
-CREATE TABLE test_ranking (
-    id UUID PRIMARY KEY,
-
-    test_id UUID NOT NULL,
-
-    user_id UUID NOT NULL,
-
-    score VARCHAR(1000),
-
-    rank_positon INT,
-
-    percentile TIMESTAMP,
-
-    status BOOLEAN DEFAULT TRUE,
-
+-------------------------------------------------
+-- TEST RANKINGS
+-------------------------------------------------
+CREATE TABLE test_rankings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    test_id UUID NOT NULL REFERENCES tests(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    score NUMERIC(10,2),
+    rank_position INT,
+    percentile NUMERIC(5,2),
+    status enum('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_test_ranking_test
-        FOREIGN KEY (test_id)
-        REFERENCES test(id),
-
-    CONSTRAINT fk_test_ranking_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =========================================================
+-------------------------------------------------
 -- INDEXES
--- Improve query performance
--- =========================================================
-
-CREATE INDEX idx_users_email
-ON users(email);
-
-CREATE INDEX idx_test_attempts_user
-ON test_attempts(user_id);
-
-CREATE INDEX idx_test_attempts_test
-ON test_attempts(test_id);
-
-CREATE INDEX idx_questions_subcategory
-ON question(sub_category_id);
-
-CREATE INDEX idx_test_questions_test
-ON test_questions(test_id);
-
--- =========================================================
--- END OF SCHEMA
--- =========================================================
+-------------------------------------------------
+CREATE INDEX idx_questions_category ON questions(category_id);
+CREATE INDEX idx_questions_subcategory ON questions(sub_category_id);
+CREATE INDEX idx_test_questions_test ON test_questions(test_id);
+CREATE INDEX idx_test_attempts_user ON test_attempts(user_id);
+CREATE INDEX idx_test_attempts_test ON test_attempts(test_id);
+CREATE INDEX idx_user_answers_attempt ON user_answers(attempt_id);
+CREATE INDEX idx_payments_user ON payments(user_id);
+CREATE INDEX idx_user_subscriptions_user ON user_subscriptions(user_id);

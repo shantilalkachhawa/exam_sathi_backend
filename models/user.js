@@ -1,22 +1,14 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const UserModel = sequelize.define('User', {
+const UserModel = sequelize.define('Users', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     allowNull: false,
     primaryKey: true
   },
-  fullName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  lastName: {
+  full_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -25,36 +17,41 @@ const UserModel = sequelize.define('User', {
     // unique: true,
     allowNull: false,
   },
-  isVerified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-    allowNull: true
-  },
-  phoneNumber: {
+  phone_number: {
     type: DataTypes.STRING,
     allowNull: true,
     // unique:true
   },
-  userType: {// regSource
-    type: DataTypes.INTEGER,
+  gender:{
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  image_url: {
+    type: DataTypes.STRING,
+    allowNull: true   
+  },
+  password_hash: {
+    type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 2,
-    // 1 -> admin, 2 -> website user, 3 -> mobile user, 4 -> vendor
+  },
+  is_verified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: true
+  },
+  user_type: {// regSource
+    type: DataTypes.ENUM('admin', 'web', 'mobile', 'vendor'),
+    allowNull: false,
+    defaultValue: 'web',
+   
   },
   subscription_id: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  // signupType: {
-  //   type: DataTypes.INTEGER,
-  //   allowNull: false,
-  //   defaultValue: 1, // 1 -> Email, 2 -> phoneNumber, 3 -> Google
-  // },
-  // create contact number details
-  //for subscription  daily routine  ,free delivery , discount by user, barish , mobile dischare , orders value mange by history ,supply chain (as a vendore 1,2,3,4 then decide privority )  billing all the process  
   status: {
-    type: DataTypes.INTEGER,
-    defaultValue: 1, // 1 -> Active 2 -> In-active
+    type: DataTypes.ENUM('active', 'inactive', 'suspended','locked'),
+    defaultValue: 'active', // 1 -> Active 2 -> In-active
     allowNull: true,
 
   }

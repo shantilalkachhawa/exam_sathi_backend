@@ -25,26 +25,18 @@ app.use(express.json()); // Parse JSON
 
 // --- API Routes ---
 const usersRoute = require('./routes/users');
-const productsRoute = require('./routes/products');
-const categoryRoute = require('./routes/category');
-const cartRoute = require('./routes/cart');
-const orderRoute = require('./routes/orders');
-const storeRoute = require('./routes/store');
-const deliveryRoute = require('./routes/delivery');
 const questionsRoute = require('./routes/questions');
+const roleRoutes = require("./routes/roleRoute");
+const categoryRoutes = require("./routes/categoryRoutes");
 
-app.use('/api/products', productsRoute);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/roles", roleRoutes);
 app.use('/api/questions', questionsRoute);
-app.use('/api/categories', categoryRoute);
-app.use('/api/cart', cartRoute);
-app.use('/api/order', orderRoute);
-app.use("/api/stores", storeRoute);
-app.use("/api/delivery-boys", deliveryRoute);
 
 // app.use('/api/payment', paymentRoute);
 app.use('/api', usersRoute);
 
-// --- Razorpay Config ---
+// --- Razorpay Config ---  
 // sequelize.sync({ alter: true })
 //   .then(() => console.log('✅ All tables created successfully!'))
 //   .catch(err => console.error('❌ Error creating tables:', err));
