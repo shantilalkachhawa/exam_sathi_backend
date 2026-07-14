@@ -54,7 +54,7 @@ async function saveQuestions({
                 title: item.title,
                 type,
                 level,
-                created_by,
+                created_by, 
                 status: "active"
 
             }, { transaction });
