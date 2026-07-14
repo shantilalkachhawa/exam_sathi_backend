@@ -1,19 +1,81 @@
-const fs = require("fs");
-const PDFParse = require("pdf-parse");
+const path = require("path");
+const fs = require("fs-extra");
+const pdf = require("pdf-poppler");
+const { v4: uuid } = require("uuid");
 
-const extractPDFText = async (filePath) => {
+async function createTempDirectory() {
 
-    const buffer = fs.readFileSync(filePath);
+    const folder = path.join(
+        process.cwd(),
+        "uploads",
+        "temp",
+        uuid()
+    );
 
-    const parser = new PDFParse.PDFParse({
-        data: buffer,
-    });
+    await fs.ensureDir(folder);
 
-    const result = await parser.getText();
+    return folder;
 
-    return result.text;
-};
+}
+
+async function convertPDFToImages(pdfPath) {
+
+    const outputDir = await createTempDirectory();
+
+    const options = {
+
+        format: "png",
+
+        out_dir: outputDir,
+
+        out_prefix: "page",
+
+        page: null,
+
+        dpi: 300
+
+    };
+
+    await pdf.convert(pdfPath, options);
+
+    const files = await fs.readdir(outputDir);
+
+    const pages = files
+        .filter(file => file.endsWith(".png"))
+        .sort((a, b) => {
+
+            const p1 = Number(a.match(/\d+/)?.[0] || 0);
+            const p2 = Number(b.match(/\d+/)?.[0] || 0);
+
+            return p1 - p2;
+
+        })
+        .map(file => path.join(outputDir, file));
+
+    return {
+
+        outputDir,
+
+        pages
+
+    };
+
+}
+
+async function deleteTempDirectory(folder) {
+
+    if (await fs.pathExists(folder)) {
+
+        await fs.remove(folder);
+
+    }
+
+}
 
 module.exports = {
-    extractPDFText,
+
+    convertPDFToImages,
+
+    deleteTempDirectory
+
 };

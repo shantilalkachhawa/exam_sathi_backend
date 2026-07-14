@@ -30,7 +30,7 @@ const UserModel = sequelize.define('Users', {
     type: DataTypes.STRING,
     allowNull: true   
   },
-  password_hash: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -40,15 +40,15 @@ const UserModel = sequelize.define('Users', {
     allowNull: true
   },
   user_type: {// regSource
-    type: DataTypes.ENUM('admin', 'web', 'mobile', 'vendor'),
+    type: DataTypes.ENUM( 'web', 'mobile', 'vendor'),
     allowNull: false,
     defaultValue: 'web',
    
   },
-  subscription_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  // subscription_id: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  // },
   status: {
     type: DataTypes.ENUM('active', 'inactive', 'suspended','locked'),
     defaultValue: 'active', // 1 -> Active 2 -> In-active

@@ -12,11 +12,11 @@ const otpVerifySchema = Joi.object({
     })
 });
 const signupSchema = Joi.object({
-  firstName: Joi.string().min(2).max(50).required().messages({
+  first_name: Joi.string().min(2).max(50).required().messages({
     'string.empty': 'First name is required',
     'string.min': 'First name must be at least 2 characters long',
   }),
-  lastName: Joi.string().min(2).max(50).required().messages({
+  last_name: Joi.string().min(2).max(50).required().messages({
     'string.empty': 'Last name is required',
     'string.min': 'Last name must be at least 2 characters long',
   }),
@@ -28,9 +28,9 @@ const signupSchema = Joi.object({
     'string.empty': 'Password is required',
     'string.min': 'Password must be at least 6 characters long',
   }),
-  userType: Joi.number().required().messages({
-    'string.empty': 'userType is required',
-    // 'string.min': 'userType must be at least 6 characters long',
+  user_type: Joi.string().valid('web', 'mobile', 'vendor').required().messages({
+    'string.empty': 'user_type is required',
+    'string.valid': 'user_type must be one of web, mobile, or vendor',
   }),
   // Add any other fields you want here
 });

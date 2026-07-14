@@ -29,7 +29,7 @@ exports.createQuestion = async (req) => {
         ext === ".png"
     ) {
 
-        extractedText = await imageService.extract(file.path);
+        extractedText = await imageService.extractOCRText(file.path);
 
     }
 
@@ -39,7 +39,7 @@ exports.createQuestion = async (req) => {
 
     }
 
-    const questions = parserService.parse(
+    const questions = parserService.parseQuestions(
         extractedText,
         file.filename
     );

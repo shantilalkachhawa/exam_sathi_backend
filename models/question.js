@@ -15,11 +15,16 @@ const Question = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    language :{
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "en"
+    },
     type: DataTypes.SMALLINT,
     level: {
       type: DataTypes.SMALLINT,
       defaultValue: 1,
-    },
+    },  
     created_by: DataTypes.INTEGER,
     status: {
       type: DataTypes.ENUM("active", "inactive"),

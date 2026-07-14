@@ -4,16 +4,16 @@ const { User, Address } = require('../models');
 const { getUserIdFromToken } = require('../middlewares/http');
 // const Address = require('../models/address');
 
-const SECRET_KEY = process.env.JWT_SECRET || 'kisan_veges';
+const SECRET_KEY = process.env.JWT_SECRET || 'exam_sathi_secret_key';
 
 const userController = {
   createUser: async (req, res) => {
     try {
-      const { firstName, lastName, email, ...data } = req.body;
+      const { first_name, last_name, email, ...data } = req.body;
 
       console.log(req.body, 'req.body')
 
-      if (!firstName || !lastName) {
+      if (!first_name || !last_name) {
         return res.status(400).json({ error: 'First name and last name are required' });
       }
       const existingUser = await User.findOne({ where: { email } });
@@ -21,8 +21,8 @@ const userController = {
         return res.status(409).json({ error: 'Email already exists' });
       }
 
-      const fullName = `${firstName} ${lastName}`;
-      const newUser = await User.create({ fullName, lastName, firstName, email, ...data });
+      const full_name = `${first_name} ${last_name}`;
+      const newUser = await User.create({ full_name,  email, ...data });
 
       const token = jwt.sign({ userId: newUser.id }, SECRET_KEY, { expiresIn: '2h' });
       console.log(token, 'token');

@@ -10,14 +10,14 @@ const Category = sequelize.define('Category', {
     allowNull: false,
   },
 
-  categoryName: {
+  category_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 
-  imgUrl: {
+  img_url: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 
   status: {

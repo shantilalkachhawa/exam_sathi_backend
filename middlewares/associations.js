@@ -10,6 +10,8 @@ module.exports = ({
   TestAttempt,
   UserAnswer,
   TestRanking,
+  Roles,
+  UserRoles,
 }) => {
 
   /* ===========================

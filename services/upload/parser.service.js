@@ -1,69 +1,187 @@
-const parseQuestions = (text, filename) => {
+// services/parser.service.js
 
-    const lines = text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean);
+const {
+    QUESTION_REGEX,
+    OPTION_REGEX,
+    ANSWER_KEY_REGEX,
+    PAGE_NUMBER_REGEX,
+    HEADER_REGEX,
+    cleanOCRText
+} = require("../../utils/regex");
+
+/**
+ * Remove unnecessary lines
+ */
+function filterLines(lines) {
+
+    return lines
+        .map(line => cleanOCRText(line))
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .filter(line => !PAGE_NUMBER_REGEX.test(line))
+        .filter(line => !HEADER_REGEX.test(line));
+}
+
+/**
+ * Parse answer key if available
+ */
+function parseAnswerKey(lines) {
+
+    const answers = {};
+
+    lines.forEach(line => {
+
+        const match = line.match(ANSWER_KEY_REGEX);
+
+        if (match) {
+
+            answers[match[1]] = match[2].toUpperCase();
+
+        }
+
+    });
+
+    return answers;
+
+}
+
+/**
+ * Parse OCR text
+ */
+function parseQuestions(text) {
+
+    const rawLines = text.split("\n");
+
+    const lines = filterLines(rawLines);
+
+    const answers = parseAnswerKey(lines);
 
     const questions = [];
 
     let currentQuestion = null;
 
-    lines.forEach((line) => {
+    let currentOption = null;
 
-        // Question
+    for (const line of lines) {
 
-        if (/^\d+\./.test(line)) {
+        //-------------------------------------------------------
+        // QUESTION
+        //-------------------------------------------------------
+
+        const questionMatch = line.match(QUESTION_REGEX);
+
+        if (questionMatch) {
 
             if (currentQuestion) {
+
                 questions.push(currentQuestion);
+
             }
 
             currentQuestion = {
-                question: line,
-                options: [],
-                answer: null,
-                file: filename,
+
+                questionNo: Number(questionMatch[1]),
+
+                title: questionMatch[2].trim(),
+
+                options: []
+
             };
+
+            currentOption = null;
+
+            continue;
+
         }
 
-        // Options
+        //-------------------------------------------------------
+        // OPTION
+        //-------------------------------------------------------
 
-        else if (
-            /^\([A-D0-9]\)/i.test(line) ||
-            /^\[[A-D0-9]\]/i.test(line)
+        const optionMatch = line.match(OPTION_REGEX);
+
+        if (optionMatch && currentQuestion) {
+
+            const optionKey = (
+                optionMatch[1] ||
+                optionMatch[2] ||
+                optionMatch[3] ||
+                optionMatch[4]
+            ).toString();
+
+            const optionText = optionMatch[5];
+
+            const key =
+                optionKey === "1"
+                    ? "A"
+                    : optionKey === "2"
+                    ? "B"
+                    : optionKey === "3"
+                    ? "C"
+                    : optionKey === "4"
+                    ? "D"
+                    : optionKey.toUpperCase();
+
+            currentOption = {
+
+                key,
+
+                text: optionText.trim(),
+
+                is_correct:
+                    answers[currentQuestion.questionNo] === key
+
+            };
+
+            currentQuestion.options.push(currentOption);
+
+            continue;
+
+        }
+
+        //-------------------------------------------------------
+        // MULTILINE OPTION
+        //-------------------------------------------------------
+
+        if (
+            currentQuestion &&
+            currentOption &&
+            currentQuestion.options.length > 0
         ) {
 
-            line = line
-                .replace("(8)", "(B)")
-                .replace("(0)", "(D)")
-                .replace("[8]", "[B]")
-                .replace("[0]", "[D]")
-                .replace("©)", "(C)")
-                .replace("©", "(C)");
+            currentOption.text += " " + line;
 
-            currentQuestion?.options.push(line);
+            continue;
+
         }
 
-        // Multiline Question
+        //-------------------------------------------------------
+        // MULTILINE QUESTION
+        //-------------------------------------------------------
 
-        else if (
+        if (
             currentQuestion &&
             currentQuestion.options.length === 0
         ) {
 
-            currentQuestion.question +=
-                " " + line;
+            currentQuestion.title += " " + line;
+
         }
-    });
+
+    }
 
     if (currentQuestion) {
+
         questions.push(currentQuestion);
+
     }
 
     return questions;
-};
+
+}
 
 module.exports = {
-    parseQuestions,
+
+    parseQuestions
+
 };

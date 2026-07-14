@@ -66,14 +66,14 @@ CREATE TABLE sub_categories (
 -- QUESTIONS
 -------------------------------------------------
 CREATE TABLE questions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id  PRIMARY KEY DEFAULT ,
     category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     sub_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     type SMALLINT NOT NULL, -- 1=Single, 2=Multiple
     level SMALLINT DEFAULT 1, -- 1=Easy,2=Medium,3=Hard
     -- explanation TEXT,
-    created_by UUID REFERENCES users(id),
+    created_by  REFERENCES users(id),
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
