@@ -1,0 +1,2427 @@
+{
+  "meta": {
+    "paper": "MP PCS 2026 General Studies Paper-1",
+    "set": "C",
+    "language": "English",
+    "sourceFile": "mp_pcs_2026_gs_paper_1_set_c.pdf",
+    "pages": 14,
+    "totalQuestions": 100,
+    "layout": "two-column scanned PDF",
+    "notes": [
+      "PDF has no text layer (scanned). Extraction done via page render + manual/curated transcription.",
+      "Option format in paper uses [A] [B] [C] [D].",
+      "Match questions include listI/listII structured fields.",
+      "Absolute 100% OCR automation is not possible on this scanned paper; this curated file is the verification target."
+    ]
+  },
+  "questions": [
+    {
+      "questionNo": 1,
+      "type": "mcq",
+      "title": "Which of the following is not an AI language?",
+      "options": [
+        {
+          "key": "A",
+          "text": "LISP"
+        },
+        {
+          "key": "B",
+          "text": "OOP"
+        },
+        {
+          "key": "C",
+          "text": "PROLOG"
+        },
+        {
+          "key": "D",
+          "text": "VBI"
+        }
+      ]
+    },
+    {
+      "questionNo": 2,
+      "type": "mcq",
+      "title": "The terminology 'Artificial Intelligence' was first coined by :",
+      "options": [
+        {
+          "key": "A",
+          "text": "John Winston"
+        },
+        {
+          "key": "B",
+          "text": "Richard Evans"
+        },
+        {
+          "key": "C",
+          "text": "Henry Samuel"
+        },
+        {
+          "key": "D",
+          "text": "John McCarthy"
+        }
+      ]
+    },
+    {
+      "questionNo": 3,
+      "type": "mcq",
+      "title": "LED is a digital display used in calculators, watches etc. LED stands for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Light Emitting Display"
+        },
+        {
+          "key": "B",
+          "text": "Liquid Electronic Display"
+        },
+        {
+          "key": "C",
+          "text": "Light Emitting Diode"
+        },
+        {
+          "key": "D",
+          "text": "Liquid Electronic Diode"
+        }
+      ]
+    },
+    {
+      "questionNo": 4,
+      "type": "mcq",
+      "title": "In web browsing, URL stands for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Uniform Resource Location"
+        },
+        {
+          "key": "B",
+          "text": "Universal Resource Location"
+        },
+        {
+          "key": "C",
+          "text": "Uniform Resource Locator"
+        },
+        {
+          "key": "D",
+          "text": "Universal Resource Locator"
+        }
+      ]
+    },
+    {
+      "questionNo": 5,
+      "type": "mcq",
+      "title": "Web page of a website can be designed using HTML. HTML stands for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "High Text Machine Language"
+        },
+        {
+          "key": "B",
+          "text": "Hyper Text Machine Language"
+        },
+        {
+          "key": "C",
+          "text": "High Text Markup Language"
+        },
+        {
+          "key": "D",
+          "text": "Hyper Text Markup Language"
+        }
+      ]
+    },
+    {
+      "questionNo": 6,
+      "type": "mcq",
+      "title": "e-ANUGYA is an e-Governance system to provide No Objection Certificate for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Crop movement outside Madhya Pradesh."
+        },
+        {
+          "key": "B",
+          "text": "Vehicle movement outside Madhya Pradesh."
+        },
+        {
+          "key": "C",
+          "text": "Mineral movement outside Madhya Pradesh."
+        },
+        {
+          "key": "D",
+          "text": "Liquor movement outside Madhya Pradesh."
+        }
+      ]
+    },
+    {
+      "questionNo": 7,
+      "type": "mcq",
+      "title": "In computer, BIOS stands for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Binary Input/Output System"
+        },
+        {
+          "key": "B",
+          "text": "Basic Input/Output System"
+        },
+        {
+          "key": "C",
+          "text": "Bit Input/Output System"
+        },
+        {
+          "key": "D",
+          "text": "Byte Input/Output System"
+        }
+      ]
+    },
+    {
+      "questionNo": 8,
+      "type": "mcq",
+      "title": "In computer, EPROM stands for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Electrically Programmable Read-Only Memory"
+        },
+        {
+          "key": "B",
+          "text": "Electronically Programmable Read-Only Memory"
+        },
+        {
+          "key": "C",
+          "text": "Extended Programmable Read-Only Memory"
+        },
+        {
+          "key": "D",
+          "text": "Erasable Programmable Read-Only Memory"
+        }
+      ]
+    },
+    {
+      "questionNo": 9,
+      "type": "mcq",
+      "title": "Optical fibre cables are used for high-speed and long-distance data transmission. Splicing of optical fibres means :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Bending of optical fibres"
+        },
+        {
+          "key": "B",
+          "text": "Drawing of optical fibres"
+        },
+        {
+          "key": "C",
+          "text": "Joining of optical fibres"
+        },
+        {
+          "key": "D",
+          "text": "Cutting of optical fibres"
+        }
+      ]
+    },
+    {
+      "questionNo": 10,
+      "type": "mcq",
+      "title": "eMARG is an e-Governance solution for :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Maintenance of rural roads."
+        },
+        {
+          "key": "B",
+          "text": "Maintenance of State highways."
+        },
+        {
+          "key": "C",
+          "text": "Maintenance of national highways."
+        },
+        {
+          "key": "D",
+          "text": "None of the above"
+        }
+      ]
+    },
+    {
+      "questionNo": 11,
+      "type": "mcq",
+      "title": "The CSIR-National Geophysical Research Institute (CSIR-NGRI) is located in which city?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Hyderabad"
+        },
+        {
+          "key": "B",
+          "text": "Bengaluru"
+        },
+        {
+          "key": "C",
+          "text": "New Delhi"
+        },
+        {
+          "key": "D",
+          "text": "Kolkata"
+        }
+      ]
+    },
+    {
+      "questionNo": 12,
+      "type": "mcq",
+      "title": "Which Indian Communication satellite, launched in the early 1980s, became the first fully operational satellite of the INSAT series and significantly strengthened India's telecommunication and broadcasting services?",
+      "options": [
+        {
+          "key": "A",
+          "text": "INSAT-1A — 10th April, 1982"
+        },
+        {
+          "key": "B",
+          "text": "INSAT-1B — 30th August, 1983"
+        },
+        {
+          "key": "C",
+          "text": "IRS-1A — 17th March, 1988"
+        },
+        {
+          "key": "D",
+          "text": "APPLE — 19th June, 1981"
+        }
+      ]
+    },
+    {
+      "questionNo": 13,
+      "type": "mcq",
+      "title": "From where was Chandrayaan-3 launched and what was unique about its landing site?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Satish Dhawan Space Centre (SHAR), Sriharikota — Near the moon's south polar region"
+        },
+        {
+          "key": "B",
+          "text": "Vikram Sarabhai Space Centre, Thiruvananthapuram — Equatorial region of the moon"
+        },
+        {
+          "key": "C",
+          "text": "Sriharikota — Near the moon's north pole"
+        },
+        {
+          "key": "D",
+          "text": "SDSC, Sriharikota — On the far side of the moon"
+        }
+      ]
+    },
+    {
+      "questionNo": 14,
+      "type": "mcq",
+      "title": "When was the International Heat Wave Workshop 2026 held?",
+      "options": [
+        {
+          "key": "A",
+          "text": "7-8 January, 2026"
+        },
+        {
+          "key": "B",
+          "text": "30-31 January, 2026"
+        },
+        {
+          "key": "C",
+          "text": "11-12 February, 2026"
+        },
+        {
+          "key": "D",
+          "text": "20-21 February, 2026"
+        }
+      ]
+    },
+    {
+      "questionNo": 15,
+      "type": "mcq",
+      "title": "Which part of the human brain is responsible for thermoregulation?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Medulla oblongata"
+        },
+        {
+          "key": "B",
+          "text": "Cerebrum"
+        },
+        {
+          "key": "C",
+          "text": "Hypothalamus"
+        },
+        {
+          "key": "D",
+          "text": "Cerebellum"
+        }
+      ]
+    },
+    {
+      "questionNo": 16,
+      "type": "mcq",
+      "title": "How many targets have been set according to the 2030 Agenda for Sustainable Development?",
+      "options": [
+        {
+          "key": "A",
+          "text": "116"
+        },
+        {
+          "key": "B",
+          "text": "132"
+        },
+        {
+          "key": "C",
+          "text": "154"
+        },
+        {
+          "key": "D",
+          "text": "169"
+        }
+      ]
+    },
+    {
+      "questionNo": 17,
+      "type": "mcq",
+      "title": "As per the sample registration system, what was the Under-5 mortality rate in 2020 in India?",
+      "options": [
+        {
+          "key": "A",
+          "text": "26"
+        },
+        {
+          "key": "B",
+          "text": "32"
+        },
+        {
+          "key": "C",
+          "text": "41"
+        },
+        {
+          "key": "D",
+          "text": "54"
+        }
+      ]
+    },
+    {
+      "questionNo": 18,
+      "type": "mcq",
+      "title": "Which branch of science deals with the observation, understanding and prediction of weather and atmospheric conditions?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Climatology"
+        },
+        {
+          "key": "B",
+          "text": "Oceanography"
+        },
+        {
+          "key": "C",
+          "text": "Meteorology"
+        },
+        {
+          "key": "D",
+          "text": "Seismology"
+        }
+      ]
+    },
+    {
+      "questionNo": 19,
+      "type": "mcq",
+      "title": "In June 2025, Group Captain Shubhanshu Shukla created history by reaching a major milestone in India's space journey. What was his historic achievement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "He became the first Indian to lead a manned mission to moon."
+        },
+        {
+          "key": "B",
+          "text": "He successfully completed the first Indian space walk in open space."
+        },
+        {
+          "key": "C",
+          "text": "He became the first Indian ever to set foot on the International Space Station (ISS) and served as mission pilot."
+        },
+        {
+          "key": "D",
+          "text": "He became the first Indian to pilot a spacecraft to Mars."
+        }
+      ]
+    },
+    {
+      "questionNo": 20,
+      "type": "mcq",
+      "title": "If one parent has sickle cell disease and the other is a sickle cell disease carrier, what percentage of their children may be sickle cell disease carriers?",
+      "options": [
+        {
+          "key": "A",
+          "text": "25%"
+        },
+        {
+          "key": "B",
+          "text": "50%"
+        },
+        {
+          "key": "C",
+          "text": "75%"
+        },
+        {
+          "key": "D",
+          "text": "100%"
+        }
+      ]
+    },
+    {
+      "questionNo": 21,
+      "type": "mcq",
+      "title": "The Asirgarh hills are situated :",
+      "options": [
+        {
+          "key": "A",
+          "text": "In the western Satpura."
+        },
+        {
+          "key": "B",
+          "text": "In the eastern Satpura."
+        },
+        {
+          "key": "C",
+          "text": "In the Maikal range."
+        },
+        {
+          "key": "D",
+          "text": "In the Baghelkhand plateau."
+        }
+      ]
+    },
+    {
+      "questionNo": 22,
+      "type": "mcq",
+      "title": "Which of the following soils is found in the Chambal basin?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Red and yellow soil"
+        },
+        {
+          "key": "B",
+          "text": "Laterite soil"
+        },
+        {
+          "key": "C",
+          "text": "Alluvial soil"
+        },
+        {
+          "key": "D",
+          "text": "Red loamy soil"
+        }
+      ]
+    },
+    {
+      "questionNo": 23,
+      "type": "mcq",
+      "title": "Baihar plateau of Balaghat is known for which mineral deposits?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Zinc"
+        },
+        {
+          "key": "B",
+          "text": "Iron ore"
+        },
+        {
+          "key": "C",
+          "text": "Dolomite"
+        },
+        {
+          "key": "D",
+          "text": "Bauxite"
+        }
+      ]
+    },
+    {
+      "questionNo": 24,
+      "type": "mcq",
+      "title": "Indian Astronomers are researching towards establishing a new mean time 'Dongla Mean Time (DMT)'. Village Dongla is situated in which district of Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Dewas"
+        },
+        {
+          "key": "B",
+          "text": "Ujjain"
+        },
+        {
+          "key": "C",
+          "text": "Dhar"
+        },
+        {
+          "key": "D",
+          "text": "Barwani"
+        }
+      ]
+    },
+    {
+      "questionNo": 25,
+      "type": "match",
+      "title": "Match List—I with List—II and choose the correct answer with the help of the code given below :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(i), (b)-(iv), (c)-(ii), (d)-(iii)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(ii), (b)-(iii), (c)-(i), (d)-(iv)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(iv), (b)-(i), (c)-(ii), (d)-(iii)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(ii), (b)-(i), (c)-(iii), (d)-(iv)"
+        }
+      ],
+      "listI": {
+        "label": "Irrigation Projects",
+        "items": {
+          "a": "The Samrat Ashok Sagar Project",
+          "b": "The Bansagar Project",
+          "c": "The Harsi Project",
+          "d": "The Omkareshwar Project"
+        }
+      },
+      "listII": {
+        "label": "Rivers",
+        "items": {
+          "i": "Son",
+          "ii": "Parvati",
+          "iii": "Narmada",
+          "iv": "Halali"
+        }
+      }
+    },
+    {
+      "questionNo": 26,
+      "type": "match",
+      "title": "Match List—I with List—II and choose the correct answer with the help of code given below :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(iii), (b)-(ii), (c)-(i), (d)-(iv)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(iii), (b)-(iv), (c)-(ii), (d)-(i)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(ii), (b)-(i), (c)-(iv), (d)-(iii)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(i), (b)-(iii), (c)-(ii), (d)-(iv)"
+        }
+      ],
+      "listI": {
+        "label": "Rivers",
+        "items": {
+          "a": "Chambal",
+          "b": "Tons (Tamsa)",
+          "c": "Narmada",
+          "d": "Kshipra"
+        }
+      },
+      "listII": {
+        "label": "Tributaries",
+        "items": {
+          "i": "Belan",
+          "ii": "Parvati",
+          "iii": "Gambhir",
+          "iv": "Tawa"
+        }
+      }
+    },
+    {
+      "questionNo": 27,
+      "type": "mcq",
+      "title": "According to Census 2011, the correct descending order of districts in population growth during 2001-11 decade is :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Bhopal, Jhabua, Indore"
+        },
+        {
+          "key": "B",
+          "text": "Bhopal, Indore, Gwalior"
+        },
+        {
+          "key": "C",
+          "text": "Indore, Bhopal, Gwalior"
+        },
+        {
+          "key": "D",
+          "text": "Indore, Jhabua, Bhopal"
+        }
+      ]
+    },
+    {
+      "questionNo": 28,
+      "type": "mcq",
+      "title": "Where was the first sugar factory established in Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Kailaras"
+        },
+        {
+          "key": "B",
+          "text": "Sehore"
+        },
+        {
+          "key": "C",
+          "text": "Dabra"
+        },
+        {
+          "key": "D",
+          "text": "Jaora"
+        }
+      ]
+    },
+    {
+      "questionNo": 29,
+      "type": "mcq",
+      "title": "The reason for the high variability of rainfall in the northwestern part of Madhya Pradesh is :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Low rainfall."
+        },
+        {
+          "key": "B",
+          "text": "High rainfall."
+        },
+        {
+          "key": "C",
+          "text": "High temperature."
+        },
+        {
+          "key": "D",
+          "text": "Continuous rainfall."
+        }
+      ]
+    },
+    {
+      "questionNo": 30,
+      "type": "mcq",
+      "title": "What was the position of Madhya Pradesh in the production of pulses in the year 2021-22 in India?",
+      "options": [
+        {
+          "key": "A",
+          "text": "First"
+        },
+        {
+          "key": "B",
+          "text": "Second"
+        },
+        {
+          "key": "C",
+          "text": "Third"
+        },
+        {
+          "key": "D",
+          "text": "Fourth"
+        }
+      ]
+    },
+    {
+      "questionNo": 31,
+      "type": "mcq",
+      "title": "According to the Census of 2011, what percentage of the total Scheduled Tribe population of the country is in Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "31.84"
+        },
+        {
+          "key": "B",
+          "text": "29.25"
+        },
+        {
+          "key": "C",
+          "text": "28.16"
+        },
+        {
+          "key": "D",
+          "text": "14.69"
+        }
+      ]
+    },
+    {
+      "questionNo": 32,
+      "type": "mcq",
+      "title": "The traditional folk musical instrument 'Gudum Baja' of the tribals of Madhya Pradesh is related to which district from the following?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Shahdol"
+        },
+        {
+          "key": "B",
+          "text": "Chhindwara"
+        },
+        {
+          "key": "C",
+          "text": "Mandla"
+        },
+        {
+          "key": "D",
+          "text": "Jhabua"
+        }
+      ]
+    },
+    {
+      "questionNo": 33,
+      "type": "mcq",
+      "title": "In which year was TRIFED established?",
+      "options": [
+        {
+          "key": "A",
+          "text": "1986"
+        },
+        {
+          "key": "B",
+          "text": "1987"
+        },
+        {
+          "key": "C",
+          "text": "1988"
+        },
+        {
+          "key": "D",
+          "text": "1989"
+        }
+      ]
+    },
+    {
+      "questionNo": 34,
+      "type": "mcq",
+      "title": "What was the income limit set for Scheduled Tribe students to pursue education abroad, in the year 2024-25?",
+      "options": [
+        {
+          "key": "A",
+          "text": "₹ 6 lakh"
+        },
+        {
+          "key": "B",
+          "text": "₹ 8 lakh"
+        },
+        {
+          "key": "C",
+          "text": "₹ 10 lakh"
+        },
+        {
+          "key": "D",
+          "text": "₹ 15 lakh"
+        }
+      ]
+    },
+    {
+      "questionNo": 35,
+      "type": "mcq",
+      "title": "What is the population of Kamar Tribe in Madhya Pradesh according to the 2011 Census?",
+      "options": [
+        {
+          "key": "A",
+          "text": "266"
+        },
+        {
+          "key": "B",
+          "text": "466"
+        },
+        {
+          "key": "C",
+          "text": "666"
+        },
+        {
+          "key": "D",
+          "text": "866"
+        }
+      ]
+    },
+    {
+      "questionNo": 36,
+      "type": "mcq",
+      "title": "According to the 2011 Census, how many tribes are there in Madhya Pradesh (except particularly vulnerable tribal groups)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "46"
+        },
+        {
+          "key": "B",
+          "text": "45"
+        },
+        {
+          "key": "C",
+          "text": "44"
+        },
+        {
+          "key": "D",
+          "text": "43"
+        }
+      ]
+    },
+    {
+      "questionNo": 37,
+      "type": "mcq",
+      "title": "Indal puja is related to which tribe of Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Barela"
+        },
+        {
+          "key": "B",
+          "text": "Gond"
+        },
+        {
+          "key": "C",
+          "text": "Baiga"
+        },
+        {
+          "key": "D",
+          "text": "Sahariya"
+        }
+      ]
+    },
+    {
+      "questionNo": 38,
+      "type": "mcq",
+      "title": "According to the provisions of which Schedule of the Constitution, the Tribal Advisory Committee was constituted in the States?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Third"
+        },
+        {
+          "key": "B",
+          "text": "Fourth"
+        },
+        {
+          "key": "C",
+          "text": "Fifth"
+        },
+        {
+          "key": "D",
+          "text": "Sixth"
+        }
+      ]
+    },
+    {
+      "questionNo": 39,
+      "type": "mcq",
+      "title": "The word 'Netam' is related to :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Taboo"
+        },
+        {
+          "key": "B",
+          "text": "Totem"
+        },
+        {
+          "key": "C",
+          "text": "Marriage custom"
+        },
+        {
+          "key": "D",
+          "text": "Tribe name"
+        }
+      ]
+    },
+    {
+      "questionNo": 40,
+      "type": "mcq",
+      "title": "Among the Gond Tribe, the word 'Baree' is related to :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Sports"
+        },
+        {
+          "key": "B",
+          "text": "Agriculture"
+        },
+        {
+          "key": "C",
+          "text": "Marriage"
+        },
+        {
+          "key": "D",
+          "text": "Religious ritual"
+        }
+      ]
+    },
+    {
+      "questionNo": 41,
+      "type": "mcq",
+      "title": "According to the novel Anandamath by Bankim Chandra Chatterjee, song Vande Mataram was sung by which character?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Mahendra Singh"
+        },
+        {
+          "key": "B",
+          "text": "Kalyani"
+        },
+        {
+          "key": "C",
+          "text": "Sipahi Bhavananda"
+        },
+        {
+          "key": "D",
+          "text": "Shanti"
+        }
+      ]
+    },
+    {
+      "questionNo": 42,
+      "type": "match",
+      "title": "Match the following tribes of Madhya Pradesh with their respective sub-tribes :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(ii), (b)-(iv), (c)-(i), (d)-(iii)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(iii), (b)-(i), (c)-(iv), (d)-(ii)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)"
+        }
+      ],
+      "listI": {
+        "label": "Tribe",
+        "items": {
+          "a": "Baiga",
+          "b": "Bharia",
+          "c": "Kol",
+          "d": "Sahariya"
+        }
+      },
+      "listII": {
+        "label": "Sub-Tribe",
+        "items": {
+          "i": "Rohia",
+          "ii": "Narotia",
+          "iii": "Dandami",
+          "iv": "Bhumiya (Bhumika)"
+        }
+      }
+    },
+    {
+      "questionNo": 43,
+      "type": "match",
+      "title": "Match the following folk songs with their characteristics :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(iv), (b)-(iii), (c)-(i), (d)-(ii)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(iii), (b)-(i), (c)-(iv), (d)-(ii)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(i), (b)-(iv), (c)-(iii), (d)-(ii)"
+        }
+      ],
+      "listI": {
+        "label": "Folk Song",
+        "items": {
+          "a": "Railo Geet",
+          "b": "Singaji and Daluji",
+          "c": "Bambuliya",
+          "d": "Alha-Udal"
+        }
+      },
+      "listII": {
+        "label": "Characteristic",
+        "items": {
+          "i": "Nirguni philosophical song",
+          "ii": "Heroic song",
+          "iii": "Songs for young men and women",
+          "iv": "Religious song"
+        }
+      }
+    },
+    {
+      "questionNo": 44,
+      "type": "mcq",
+      "title": "Which of the following facts about the Adamgarh archaeological site in Narmadapuram district of Madhya Pradesh is false?",
+      "options": [
+        {
+          "key": "A",
+          "text": "This archaeological site is located on the bank of the Narmada River."
+        },
+        {
+          "key": "B",
+          "text": "The oldest evidences of animal husbandry have been found here."
+        },
+        {
+          "key": "C",
+          "text": "Archaeological excavations were carried out at this site by V. S. Wakankar."
+        },
+        {
+          "key": "D",
+          "text": "A large number of palaeolithic tools and bone remains have been found here."
+        }
+      ]
+    },
+    {
+      "questionNo": 45,
+      "type": "mcq",
+      "title": "Which of the following sites in Madhya Pradesh is recognized as a 'World Heritage Site'?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The historical group of Orchha"
+        },
+        {
+          "key": "B",
+          "text": "The Sanchi Stupa"
+        },
+        {
+          "key": "C",
+          "text": "The Satpura Tiger Reserve"
+        },
+        {
+          "key": "D",
+          "text": "The Bhojeshwar Temple Complex"
+        }
+      ]
+    },
+    {
+      "questionNo": 46,
+      "type": "mcq",
+      "title": "In which of the minor rock edicts of Emperor Ashoka, found in Madhya Pradesh, is his personal name mentioned?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rupnath"
+        },
+        {
+          "key": "B",
+          "text": "Gurjara"
+        },
+        {
+          "key": "C",
+          "text": "Saro-Maro"
+        },
+        {
+          "key": "D",
+          "text": "Panguraria"
+        }
+      ]
+    },
+    {
+      "questionNo": 47,
+      "type": "mcq",
+      "title": "Which of the following statements about the main features of the 'Jagadambi Temple' in Khajuraho is false?",
+      "options": [
+        {
+          "key": "A",
+          "text": "This temple has both a half-mandapa and a verandah arranged within a single chamber."
+        },
+        {
+          "key": "B",
+          "text": "This temple lacks a circumambulation path."
+        },
+        {
+          "key": "C",
+          "text": "There is a colossal statue of Laxmi in the sanctorum."
+        },
+        {
+          "key": "D",
+          "text": "A statue of Vishnu is installed at the main entrance of the sanctorum."
+        }
+      ]
+    },
+    {
+      "questionNo": 48,
+      "type": "match",
+      "title": "Match the following dialects with their corresponding tribal regions :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(iii), (b)-(iv), (c)-(ii), (d)-(i)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(iv), (b)-(iii), (c)-(i), (d)-(ii)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(ii), (b)-(i), (c)-(iv), (d)-(iii)"
+        }
+      ],
+      "listI": {
+        "label": "Dialects",
+        "items": {
+          "a": "Nimadi",
+          "b": "Korku",
+          "c": "Bhili",
+          "d": "Gondi"
+        }
+      },
+      "listII": {
+        "label": "District",
+        "items": {
+          "i": "Mandla, Dindori",
+          "ii": "Ratlam, Alirajpur",
+          "iii": "Barwani, Khandwa",
+          "iv": "Betul, Narmadapuram"
+        }
+      }
+    },
+    {
+      "questionNo": 49,
+      "type": "match",
+      "title": "Match the following writers from Madhya Pradesh with their respective works :",
+      "options": [
+        {
+          "key": "A",
+          "text": "(a)-(iv), (b)-(iii), (c)-(i), (d)-(ii)"
+        },
+        {
+          "key": "B",
+          "text": "(a)-(ii), (b)-(iv), (c)-(iii), (d)-(i)"
+        },
+        {
+          "key": "C",
+          "text": "(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)"
+        },
+        {
+          "key": "D",
+          "text": "(a)-(iii), (b)-(i), (c)-(iv), (d)-(ii)"
+        }
+      ],
+      "listI": {
+        "label": "Writer",
+        "items": {
+          "a": "Keshav Das",
+          "b": "Bhawani Prasad Mishra",
+          "c": "Padmakar",
+          "d": "Mulla Ramuji"
+        }
+      },
+      "listII": {
+        "label": "Works",
+        "items": {
+          "i": "Gangalahari",
+          "ii": "Gulabi Urdu",
+          "iii": "Gandhi Panchsati",
+          "iv": "Kavipriya"
+        }
+      }
+    },
+    {
+      "questionNo": 50,
+      "type": "mcq",
+      "title": "Who is credited with transforming the Maach folk theatre style of Malwa into the present day performing art?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Siddheshwar Sen"
+        },
+        {
+          "key": "B",
+          "text": "Kaushal Singh"
+        },
+        {
+          "key": "C",
+          "text": "Kesari Singh"
+        },
+        {
+          "key": "D",
+          "text": "Rewaram Kuliwala"
+        }
+      ]
+    },
+    {
+      "questionNo": 51,
+      "type": "mcq",
+      "title": "On 14th January 2026, Sergio Gor assumed charge as the Ambassador of which country to India?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Italy"
+        },
+        {
+          "key": "B",
+          "text": "United States of America"
+        },
+        {
+          "key": "C",
+          "text": "France"
+        },
+        {
+          "key": "D",
+          "text": "Germany"
+        }
+      ]
+    },
+    {
+      "questionNo": 52,
+      "type": "mcq",
+      "title": "By which countries will the 2026 Women's T20 World Cup be hosted?",
+      "options": [
+        {
+          "key": "A",
+          "text": "India and Sri Lanka"
+        },
+        {
+          "key": "B",
+          "text": "Australia and South Africa"
+        },
+        {
+          "key": "C",
+          "text": "England and Wales"
+        },
+        {
+          "key": "D",
+          "text": "New Zealand and West Indies"
+        }
+      ]
+    },
+    {
+      "questionNo": 53,
+      "type": "mcq",
+      "title": "Who was awarded the Padma Bhushan in 2026 for contribution to the financial sector (industry and trade)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ajay Piramal"
+        },
+        {
+          "key": "B",
+          "text": "Uday Kotak"
+        },
+        {
+          "key": "C",
+          "text": "Deepak Parekh"
+        },
+        {
+          "key": "D",
+          "text": "Raghuram Rajan"
+        }
+      ]
+    },
+    {
+      "questionNo": 54,
+      "type": "mcq",
+      "title": "What was the theme of the Sahityotsav 2026 organised by the Sahitya Akademi under the Department of Culture, Government of India, from March 30 to April 4, 2026?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Festival of poetry"
+        },
+        {
+          "key": "B",
+          "text": "Festival of letters"
+        },
+        {
+          "key": "C",
+          "text": "Festival of story"
+        },
+        {
+          "key": "D",
+          "text": "Festival of folklore"
+        }
+      ]
+    },
+    {
+      "questionNo": 55,
+      "type": "mcq",
+      "title": "What is the new base year of the Consumer Price Index (CPI)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "2011"
+        },
+        {
+          "key": "B",
+          "text": "2012"
+        },
+        {
+          "key": "C",
+          "text": "2023"
+        },
+        {
+          "key": "D",
+          "text": "2024"
+        }
+      ]
+    },
+    {
+      "questionNo": 56,
+      "type": "mcq",
+      "title": "The United Nations has declared the year 2025 as the international year of what?",
+      "options": [
+        {
+          "key": "A",
+          "text": "International Year of Forests"
+        },
+        {
+          "key": "B",
+          "text": "International Year of Millets"
+        },
+        {
+          "key": "C",
+          "text": "International Year of Sustainable Energy"
+        },
+        {
+          "key": "D",
+          "text": "International Year of Cooperatives"
+        }
+      ]
+    },
+    {
+      "questionNo": 57,
+      "type": "mcq",
+      "title": "The award given by Madhya Pradesh Government in Mallakhamb sports is :",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prabhash Joshi Sports Award"
+        },
+        {
+          "key": "B",
+          "text": "Ved Pratap Vaidik Sports Award"
+        },
+        {
+          "key": "C",
+          "text": "Alok Mehta Sports Award"
+        },
+        {
+          "key": "D",
+          "text": "Kailash Chandra Pant Sports Award"
+        }
+      ]
+    },
+    {
+      "questionNo": 58,
+      "type": "mcq",
+      "title": "In which field was Mohan Nagar awarded the Padma Shri in 2026 for his outstanding contribution?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Sports"
+        },
+        {
+          "key": "B",
+          "text": "Politics"
+        },
+        {
+          "key": "C",
+          "text": "Industry"
+        },
+        {
+          "key": "D",
+          "text": "Environmental Conservation"
+        }
+      ]
+    },
+    {
+      "questionNo": 59,
+      "type": "mcq",
+      "title": "'Suman Sakhi Chatbot' is an example of digital initiative in which sector?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Education"
+        },
+        {
+          "key": "B",
+          "text": "Health"
+        },
+        {
+          "key": "C",
+          "text": "Transport"
+        },
+        {
+          "key": "D",
+          "text": "Defence"
+        }
+      ]
+    },
+    {
+      "questionNo": 60,
+      "type": "mcq",
+      "title": "From where was the 'Swasth Nari, Sashakt Parivar Abhiyaan' launched by the Prime Minister?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Bhopal"
+        },
+        {
+          "key": "B",
+          "text": "Indore"
+        },
+        {
+          "key": "C",
+          "text": "Dhar"
+        },
+        {
+          "key": "D",
+          "text": "Ujjain"
+        }
+      ]
+    },
+    {
+      "questionNo": 61,
+      "type": "mcq",
+      "title": "Which is the longest lake in India?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Chilika"
+        },
+        {
+          "key": "B",
+          "text": "Kolleru"
+        },
+        {
+          "key": "C",
+          "text": "Vembanad"
+        },
+        {
+          "key": "D",
+          "text": "Pookode"
+        }
+      ]
+    },
+    {
+      "questionNo": 62,
+      "type": "mcq",
+      "title": "Which is the highest peak in the Kumaon Himalaya?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Kamet"
+        },
+        {
+          "key": "B",
+          "text": "Nanda Devi"
+        },
+        {
+          "key": "C",
+          "text": "Trishul"
+        },
+        {
+          "key": "D",
+          "text": "Badrinath"
+        }
+      ]
+    },
+    {
+      "questionNo": 63,
+      "type": "mcq",
+      "title": "Which of the following rivers had the ancient name Askini?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Beas"
+        },
+        {
+          "key": "B",
+          "text": "Chenab"
+        },
+        {
+          "key": "C",
+          "text": "Jhelum"
+        },
+        {
+          "key": "D",
+          "text": "Ravi"
+        }
+      ]
+    },
+    {
+      "questionNo": 64,
+      "type": "mcq",
+      "title": "In October 2025, which severe cyclonic storm affected the eastern coastal parts of India?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Fengal"
+        },
+        {
+          "key": "B",
+          "text": "Shakti"
+        },
+        {
+          "key": "C",
+          "text": "Montha"
+        },
+        {
+          "key": "D",
+          "text": "Asna"
+        }
+      ]
+    },
+    {
+      "questionNo": 65,
+      "type": "mcq",
+      "title": "According to the India State of Forest Report 2023, which were the top three States in the country in terms of area under forests?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Madhya Pradesh, Jharkhand, Chhattisgarh"
+        },
+        {
+          "key": "B",
+          "text": "Madhya Pradesh, Himachal Pradesh, Manipur"
+        },
+        {
+          "key": "C",
+          "text": "Madhya Pradesh, Arunachal Pradesh, Sikkim"
+        },
+        {
+          "key": "D",
+          "text": "Madhya Pradesh, Maharashtra, Odisha"
+        }
+      ]
+    },
+    {
+      "questionNo": 66,
+      "type": "statement",
+      "title": "Based on the following statements, select the correct answer from the code given below :\n(a) Western disturbances are driven by westerly winds.\n(b) Western disturbances bring moisture from the Mediterranean Sea.\n(c) They cause rainfall in the northwestern parts of India during the winter season.",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only (c) is correct"
+        },
+        {
+          "key": "B",
+          "text": "Only (a) and (c) are correct"
+        },
+        {
+          "key": "C",
+          "text": "Only (b) and (c) are correct"
+        },
+        {
+          "key": "D",
+          "text": "(a), (b) and (c) are correct"
+        }
+      ]
+    },
+    {
+      "questionNo": 67,
+      "type": "mcq",
+      "title": "According to the 2011 Census, which State had the lowest density of population in the country?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Meghalaya"
+        },
+        {
+          "key": "B",
+          "text": "Mizoram"
+        },
+        {
+          "key": "C",
+          "text": "Arunachal Pradesh"
+        },
+        {
+          "key": "D",
+          "text": "Manipur"
+        }
+      ]
+    },
+    {
+      "questionNo": 68,
+      "type": "mcq",
+      "title": "According to the Indian Minerals Yearbook 2022, which State was on the second rank in the country in terms of Manganese production?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Odisha"
+        },
+        {
+          "key": "B",
+          "text": "Karnataka"
+        },
+        {
+          "key": "C",
+          "text": "Maharashtra"
+        },
+        {
+          "key": "D",
+          "text": "Madhya Pradesh"
+        }
+      ]
+    },
+    {
+      "questionNo": 69,
+      "type": "mcq",
+      "title": "In the year 2023-24, what was the correct ascending order of the top four States in the country based on rice production?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Punjab, Telangana, Uttar Pradesh, West Bengal"
+        },
+        {
+          "key": "B",
+          "text": "Punjab, West Bengal, Uttar Pradesh, Telangana"
+        },
+        {
+          "key": "C",
+          "text": "Odisha, Telangana, Punjab, Uttar Pradesh"
+        },
+        {
+          "key": "D",
+          "text": "West Bengal, Telangana, Punjab, Uttar Pradesh"
+        }
+      ]
+    },
+    {
+      "questionNo": 70,
+      "type": "mcq",
+      "title": "Which of the following was the correct ascending order of the States in the installed capacity of renewable energy up to December 2025?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Gujarat, Rajasthan, Tamil Nadu, Maharashtra"
+        },
+        {
+          "key": "B",
+          "text": "Karnataka, Maharashtra, Rajasthan, Gujarat"
+        },
+        {
+          "key": "C",
+          "text": "Tamil Nadu, Maharashtra, Rajasthan, Gujarat"
+        },
+        {
+          "key": "D",
+          "text": "Karnataka, Maharashtra, Gujarat, Rajasthan"
+        }
+      ]
+    },
+    {
+      "questionNo": 71,
+      "type": "mcq",
+      "title": "India's foreign exchange reserve at the end of December, 2024 was :",
+      "options": [
+        {
+          "key": "A",
+          "text": "USD 604.3 billion"
+        },
+        {
+          "key": "B",
+          "text": "USD 640.3 billion"
+        },
+        {
+          "key": "C",
+          "text": "USD 603.4 billion"
+        },
+        {
+          "key": "D",
+          "text": "USD 630.4 billion"
+        }
+      ]
+    },
+    {
+      "questionNo": 72,
+      "type": "mcq",
+      "title": "Under National Viral Hepatitis Control Programme, by which year the objective is to eliminate viral hepatitis-C?",
+      "options": [
+        {
+          "key": "A",
+          "text": "2033"
+        },
+        {
+          "key": "B",
+          "text": "2032"
+        },
+        {
+          "key": "C",
+          "text": "2031"
+        },
+        {
+          "key": "D",
+          "text": "2030"
+        }
+      ]
+    },
+    {
+      "questionNo": 73,
+      "type": "mcq",
+      "title": "According to Economic Survey 2024-25, the score of Sustainable Development Goal 9 of Madhya Pradesh in the year 2023-24 was :",
+      "options": [
+        {
+          "key": "A",
+          "text": "43"
+        },
+        {
+          "key": "B",
+          "text": "37"
+        },
+        {
+          "key": "C",
+          "text": "39"
+        },
+        {
+          "key": "D",
+          "text": "90"
+        }
+      ]
+    },
+    {
+      "questionNo": 74,
+      "type": "mcq",
+      "title": "How much growth was recorded in patent filing in Madhya Pradesh during the period from 2018-19 to 2022-23?",
+      "options": [
+        {
+          "key": "A",
+          "text": "230%"
+        },
+        {
+          "key": "B",
+          "text": "320%"
+        },
+        {
+          "key": "C",
+          "text": "180%"
+        },
+        {
+          "key": "D",
+          "text": "280%"
+        }
+      ]
+    },
+    {
+      "questionNo": 75,
+      "type": "mcq",
+      "title": "In recent years, the agriculture sector in India has shown growth annually from Financial Year 2017 to Financial Year 2023, demonstrating resilience despite challenges, which was approximately :",
+      "options": [
+        {
+          "key": "A",
+          "text": "4.2 percent"
+        },
+        {
+          "key": "B",
+          "text": "4.8 percent"
+        },
+        {
+          "key": "C",
+          "text": "5.0 percent"
+        },
+        {
+          "key": "D",
+          "text": "5.2 percent"
+        }
+      ]
+    },
+    {
+      "questionNo": 76,
+      "type": "mcq",
+      "title": "According to the report published by the Confederation of Indian Industry in February 2025, the share of pharmaceutical sector of Madhya Pradesh in terms of gross fixed capital formation in India is :",
+      "options": [
+        {
+          "key": "A",
+          "text": "2.9%"
+        },
+        {
+          "key": "B",
+          "text": "1.0%"
+        },
+        {
+          "key": "C",
+          "text": "1.9%"
+        },
+        {
+          "key": "D",
+          "text": "2.2%"
+        }
+      ]
+    },
+    {
+      "questionNo": 77,
+      "type": "mcq",
+      "title": "According to Economic Survey of Madhya Pradesh 2024-25, under 'One District One Product (ODOP)', which district is not included in case of six major agricultural produces?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Anuppur"
+        },
+        {
+          "key": "B",
+          "text": "Narsinghpur"
+        },
+        {
+          "key": "C",
+          "text": "Balaghat"
+        },
+        {
+          "key": "D",
+          "text": "Gwalior"
+        }
+      ]
+    },
+    {
+      "questionNo": 78,
+      "type": "mcq",
+      "title": "According to the Economic Survey 2024-25 of Madhya Pradesh, the solar energy capacity of Madhya Pradesh up to October, 2024 was :",
+      "options": [
+        {
+          "key": "A",
+          "text": "60166 Megawatt"
+        },
+        {
+          "key": "B",
+          "text": "66610 Megawatt"
+        },
+        {
+          "key": "C",
+          "text": "66160 Megawatt"
+        },
+        {
+          "key": "D",
+          "text": "61660 Megawatt"
+        }
+      ]
+    },
+    {
+      "questionNo": 79,
+      "type": "mcq",
+      "title": "Madhya Pradesh Industrial Promotion Policy 2025, launched in February 2025 includes how many sector specific strategies?",
+      "options": [
+        {
+          "key": "A",
+          "text": "9"
+        },
+        {
+          "key": "B",
+          "text": "10"
+        },
+        {
+          "key": "C",
+          "text": "11"
+        },
+        {
+          "key": "D",
+          "text": "12"
+        }
+      ]
+    },
+    {
+      "questionNo": 80,
+      "type": "mcq",
+      "title": "The Financial Inclusion Index of Reserve Bank of India in March, 2024 was :",
+      "options": [
+        {
+          "key": "A",
+          "text": "64.2"
+        },
+        {
+          "key": "B",
+          "text": "62.4"
+        },
+        {
+          "key": "C",
+          "text": "53.9"
+        },
+        {
+          "key": "D",
+          "text": "59.3"
+        }
+      ]
+    },
+    {
+      "questionNo": 81,
+      "type": "mcq",
+      "title": "In the Vedic Literature, Sabha and Samiti are called two daughters of which deity?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Agni"
+        },
+        {
+          "key": "B",
+          "text": "Prajapati"
+        },
+        {
+          "key": "C",
+          "text": "Varun"
+        },
+        {
+          "key": "D",
+          "text": "Rudra"
+        }
+      ]
+    },
+    {
+      "questionNo": 82,
+      "type": "mcq",
+      "title": "In which text the four Ashramas have been mentioned for the first time?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rigveda"
+        },
+        {
+          "key": "B",
+          "text": "Jabalopanisada"
+        },
+        {
+          "key": "C",
+          "text": "Manusmriti"
+        },
+        {
+          "key": "D",
+          "text": "Mahabharata"
+        }
+      ]
+    },
+    {
+      "questionNo": 83,
+      "type": "mcq",
+      "title": "The depiction of Krishna and Balarama is found on the coins of which Indo-Greek ruler?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Menandar"
+        },
+        {
+          "key": "B",
+          "text": "Demetrius"
+        },
+        {
+          "key": "C",
+          "text": "Agathokleis"
+        },
+        {
+          "key": "D",
+          "text": "Eucratides"
+        }
+      ]
+    },
+    {
+      "questionNo": 84,
+      "type": "mcq",
+      "title": "Who among the following was a female Alwar Saint?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Madhura Kavi"
+        },
+        {
+          "key": "B",
+          "text": "Perumal"
+        },
+        {
+          "key": "C",
+          "text": "Tirupan"
+        },
+        {
+          "key": "D",
+          "text": "Andal"
+        }
+      ]
+    },
+    {
+      "questionNo": 85,
+      "type": "mcq",
+      "title": "Who also founded the United Provinces Kisan Sabha in 1918 A.D.?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Mahamana Malviya"
+        },
+        {
+          "key": "B",
+          "text": "Baba Ram Chandra"
+        },
+        {
+          "key": "C",
+          "text": "Indra Narayan Dwivedi"
+        },
+        {
+          "key": "D",
+          "text": "Jhinguri Singh"
+        }
+      ]
+    },
+    {
+      "questionNo": 86,
+      "type": "mcq",
+      "title": "When did the Tebhaga Movement begin in Bengal?",
+      "options": [
+        {
+          "key": "A",
+          "text": "September 1946"
+        },
+        {
+          "key": "B",
+          "text": "August 1945"
+        },
+        {
+          "key": "C",
+          "text": "January 1938"
+        },
+        {
+          "key": "D",
+          "text": "March 1935"
+        }
+      ]
+    },
+    {
+      "questionNo": 87,
+      "type": "mcq",
+      "title": "As per ancient Sanskrit literature, which of the following spices was called Yavanapriya?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ginger"
+        },
+        {
+          "key": "B",
+          "text": "Nutmeg"
+        },
+        {
+          "key": "C",
+          "text": "Black pepper"
+        },
+        {
+          "key": "D",
+          "text": "Cardamom"
+        }
+      ]
+    },
+    {
+      "questionNo": 88,
+      "type": "mcq",
+      "title": "In which inscription is the mention of Bharatvarsha found?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ayodhya Inscription of Dhandeva"
+        },
+        {
+          "key": "B",
+          "text": "Iron Pillar Inscription of Mehrauli"
+        },
+        {
+          "key": "C",
+          "text": "Garudadhwaja Inscription of Besnagar"
+        },
+        {
+          "key": "D",
+          "text": "Hathigumpha Inscription of Kharavela"
+        }
+      ]
+    },
+    {
+      "questionNo": 89,
+      "type": "mcq",
+      "title": "The draft The Philosophy of the Bomb was written by Bhagwati Charan Vohra at whose request and after a full discussion with him?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ram Prasad Bismil"
+        },
+        {
+          "key": "B",
+          "text": "Sukhdev"
+        },
+        {
+          "key": "C",
+          "text": "Rajguru"
+        },
+        {
+          "key": "D",
+          "text": "Chandrashekhar Azad"
+        }
+      ]
+    },
+    {
+      "questionNo": 90,
+      "type": "mcq",
+      "title": "Who was the author of The Secret Doctrine?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raja Ram Mohan Roy"
+        },
+        {
+          "key": "B",
+          "text": "H. P. Blavatsky"
+        },
+        {
+          "key": "C",
+          "text": "Keshab Chandra Sen"
+        },
+        {
+          "key": "D",
+          "text": "D. K. Karve"
+        }
+      ]
+    },
+    {
+      "questionNo": 91,
+      "type": "mcq",
+      "title": "Which of the following is not an essential function of Gram Panchayat in Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To protect the assets of Gram Panchayat"
+        },
+        {
+          "key": "B",
+          "text": "To promote cooperatives"
+        },
+        {
+          "key": "C",
+          "text": "To catch unowned animals and mad dogs"
+        },
+        {
+          "key": "D",
+          "text": "To operate police stations"
+        }
+      ]
+    },
+    {
+      "questionNo": 92,
+      "type": "mcq",
+      "title": "Nagar Panchayat is constituted for which of the following areas in Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Transitional urban area"
+        },
+        {
+          "key": "B",
+          "text": "Small-scale area"
+        },
+        {
+          "key": "C",
+          "text": "Industrial area"
+        },
+        {
+          "key": "D",
+          "text": "Large urban area"
+        }
+      ]
+    },
+    {
+      "questionNo": 93,
+      "type": "mcq",
+      "title": "How were the members of the Indian Constituent Assembly elected?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Directly by the people of India"
+        },
+        {
+          "key": "B",
+          "text": "Indirectly by the members of the Provincial Legislative Assemblies"
+        },
+        {
+          "key": "C",
+          "text": "Nominated by the Governor-General"
+        },
+        {
+          "key": "D",
+          "text": "Indirectly by the Provincial Committees of the Congress"
+        }
+      ]
+    },
+    {
+      "questionNo": 94,
+      "type": "mcq",
+      "title": "The service conditions of the judges of the Supreme Court are decided by which Article of the Constitution?",
+      "options": [
+        {
+          "key": "A",
+          "text": "129(3)"
+        },
+        {
+          "key": "B",
+          "text": "127(4)"
+        },
+        {
+          "key": "C",
+          "text": "122(1)"
+        },
+        {
+          "key": "D",
+          "text": "124(2)"
+        }
+      ]
+    },
+    {
+      "questionNo": 95,
+      "type": "mcq",
+      "title": "In Part-IV, relating to Directive Principles of State Policy, which of the following Articles was not added by the Forty-second Constitution Amendment Act?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Article 39A"
+        },
+        {
+          "key": "B",
+          "text": "Article 43A"
+        },
+        {
+          "key": "C",
+          "text": "Article 43B"
+        },
+        {
+          "key": "D",
+          "text": "Article 48A"
+        }
+      ]
+    },
+    {
+      "questionNo": 96,
+      "type": "mcq",
+      "title": "The Parliament's power to amend the Constitution received first challenge through which of the following cases?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The Kesavananda Bharati Case"
+        },
+        {
+          "key": "B",
+          "text": "The Golaknath Case"
+        },
+        {
+          "key": "C",
+          "text": "The Champakam Dorairajan Case"
+        },
+        {
+          "key": "D",
+          "text": "The Shankari Prasad Case"
+        }
+      ]
+    },
+    {
+      "questionNo": 97,
+      "type": "mcq",
+      "title": "Which of the following is not correct about the Governor of Madhya Pradesh?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The Governor is appointed by the President."
+        },
+        {
+          "key": "B",
+          "text": "The Governor has the power to appoint the Judges of the High Court."
+        },
+        {
+          "key": "C",
+          "text": "During emergency, he acts as the representative of the President."
+        },
+        {
+          "key": "D",
+          "text": "The Governor is the head of the State Executive."
+        }
+      ]
+    },
+    {
+      "questionNo": 98,
+      "type": "mcq",
+      "title": "In the execution of which of the following functions, Lok Sabha and Rajya Sabha have equal powers?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Passage of money bill"
+        },
+        {
+          "key": "B",
+          "text": "Creation of new All India Service"
+        },
+        {
+          "key": "C",
+          "text": "Passage of no-confidence motion against the Government"
+        },
+        {
+          "key": "D",
+          "text": "Passage of a Constitution Amendment Bill"
+        }
+      ]
+    },
+    {
+      "questionNo": 99,
+      "type": "mcq",
+      "title": "Which of the following Commissions has been given the special responsibility of safeguarding the rights and interests of the Anglo-Indian Community?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The National Commission for Scheduled Castes"
+        },
+        {
+          "key": "B",
+          "text": "The National Commission for Scheduled Tribes"
+        },
+        {
+          "key": "C",
+          "text": "The National Backward Classes Commission"
+        },
+        {
+          "key": "D",
+          "text": "The National Human Rights Commission"
+        }
+      ]
+    },
+    {
+      "questionNo": 100,
+      "type": "mcq",
+      "title": "Which of the following statements is incorrect regarding the sessions of Madhya Pradesh Legislative Assembly?",
+      "options": [
+        {
+          "key": "A",
+          "text": "There must be minimum two sittings of the Legislative Assembly in a calendar year."
+        },
+        {
+          "key": "B",
+          "text": "There must not be a gap of more than six months between two sittings."
+        },
+        {
+          "key": "C",
+          "text": "The Governor summons the sitting of the Legislative Assembly."
+        },
+        {
+          "key": "D",
+          "text": "The Speaker of the Legislative Assembly prorogues its sitting."
+        }
+      ]
+    }
+  ]
+}

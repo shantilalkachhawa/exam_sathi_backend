@@ -13,7 +13,7 @@ router.put("/:id", roleController.updateRole);
 router.delete("/:id", roleController.deleteRole);
 
 
-// User Role
+// User Role        
 
 router.post("/assign", roleController.assignRole);
 router.get("/user/:userId", roleController.getUserRoles);

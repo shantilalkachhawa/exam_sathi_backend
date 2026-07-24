@@ -14,8 +14,8 @@ const io = socketIo(server);
 
 app.use(cors());
 
-// DB connection
-const sequelize = require('./config/db');
+// DB connection + model associations
+const { sequelize } = require('./models');
 
 // --- Socket.IO Logic ---
 require('./controllers/socket')(io);
