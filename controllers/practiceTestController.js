@@ -4,43 +4,45 @@ const {
   Question,
   Category,
   SubCategory,
+  QuestionOption
 } = require("../models");
 
 
 // =============================
 // Create Practice Test
 // =============================
-exports.createPracticeTest = async (req, res) => {
-  try {
-    const {
-      question_ids = [],
-      ...testData
-    } = req.body;
+  exports.createPracticeTest = async (req, res) => {
+    try {
+      const {
+        question_ids = [],
+        ...testData
+      } = req.body;
+      
+     
+      if (question_ids.length) {
+      const practiceTest = await PracticeTest.create({...testData,total_questions: question_ids.length});
+      
+        const mappings = question_ids.map((question_id) => ({
+          pt_id: practiceTest.id,
+          question_id,
+        }));
 
-    const practiceTest = await PracticeTest.create(testData);
-
-    if (question_ids.length) {
-      const mappings = question_ids.map((question_id) => ({
-        pt_id: practiceTest.id,
-        question_id,
-      }));
-
-      await TestQuestion.bulkCreate(mappings);
+        await TestQuestion.bulkCreate(mappings);
+        
+        return res.status(201).json({
+          success: true,
+          message: "Practice Test created successfully.",
+          data: practiceTest,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
-
-    return res.status(201).json({
-      success: true,
-      message: "Practice Test created successfully.",
-      data: practiceTest,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+  };
 
 
 // =============================
@@ -104,6 +106,15 @@ exports.getPracticeTestById = async (req, res) => {
           through: {
             attributes: [],
           },
+            include: [
+            {
+              model: QuestionOption,
+              as: "options", 
+               attributes: {
+                 exclude: ["is_correct", "createdAt", "updatedAt"],
+          },
+            },
+          ],
         },
       ],
     });

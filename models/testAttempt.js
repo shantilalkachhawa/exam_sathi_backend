@@ -11,7 +11,10 @@ const TestAttempt = sequelize.define(
     },
     user_id: DataTypes.INTEGER,
     pt_id: DataTypes.INTEGER,
-    started_at: DataTypes.DATE,
+    started_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
     submitted_at: DataTypes.DATE,
     total_questions: DataTypes.INTEGER,
     attempted_questions: {
