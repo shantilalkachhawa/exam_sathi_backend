@@ -286,7 +286,269 @@ const getQuestions = async (req, res) => {
     }
 };
 
+/**
+ * Manual JSON create for admin portal.
+ * Body: title, category_id, options[{text,is_correct}], optional sub_category_id, type, level, language, status
+ */
+const createManualQuestion = async (req, res) => {
+    try {
+        const {
+            title,
+            category_id,
+            sub_category_id = null,
+            options = [],
+            type = 1,
+            level = 1,
+            language = "en",
+            status = "active",
+            created_by = 1,
+        } = req.body;
+
+        if (!title || !category_id) {
+            return res.status(400).json({
+                success: false,
+                message: "title and category_id are required.",
+            });
+        }
+
+        if (!Array.isArray(options) || options.length < 2 || options.length > 6) {
+            return res.status(400).json({
+                success: false,
+                message: "options must be an array of 2–6 items.",
+            });
+        }
+
+        const hasCorrect = options.some((o) => o.is_correct);
+        if (!hasCorrect) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one option must be marked is_correct.",
+            });
+        }
+
+        const question = await Question.create({
+            title,
+            category_id,
+            sub_category_id,
+            type: Number(type) || 1,
+            level: Number(level) || 1,
+            language,
+            status,
+            created_by,
+        });
+
+        await QuestionOption.bulkCreate(
+            options.map((option) => ({
+                question_id: question.id,
+                option_text: option.text ?? option.option_text ?? "",
+                is_correct: Boolean(option.is_correct),
+            }))
+        );
+
+        const created = await Question.findByPk(question.id, {
+            include: [
+                {
+                    model: QuestionOption,
+                    as: "options",
+                    attributes: ["id", "option_text", "is_correct"],
+                },
+            ],
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Question created successfully.",
+            data: {
+                id: created.id,
+                title: created.title,
+                category_id: created.category_id,
+                sub_category_id: created.sub_category_id,
+                language: created.language,
+                type: created.type,
+                level: created.level,
+                status: created.status,
+                options: created.options.map((option) => ({
+                    id: option.id,
+                    text: option.option_text,
+                    is_correct: option.is_correct,
+                })),
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+const getQuestionById = async (req, res) => {
+    try {
+        const question = await Question.findByPk(req.params.id, {
+            include: [
+                {
+                    model: QuestionOption,
+                    as: "options",
+                    attributes: ["id", "option_text", "is_correct"],
+                },
+            ],
+        });
+
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: "Question not found.",
+            });
+        }
+
+        return res.json({
+            success: true,
+            data: {
+                id: question.id,
+                title: question.title,
+                category_id: question.category_id,
+                sub_category_id: question.sub_category_id,
+                language: question.language,
+                type: question.type,
+                level: question.level,
+                status: question.status,
+                options: question.options.map((option) => ({
+                    id: option.id,
+                    text: option.option_text,
+                    is_correct: option.is_correct,
+                })),
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+const updateQuestion = async (req, res) => {
+    try {
+        const question = await Question.findByPk(req.params.id);
+
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: "Question not found.",
+            });
+        }
+
+        const {
+            title,
+            category_id,
+            sub_category_id,
+            type,
+            level,
+            language,
+            status,
+            options,
+        } = req.body;
+
+        await question.update({
+            ...(title !== undefined ? { title } : {}),
+            ...(category_id !== undefined ? { category_id } : {}),
+            ...(sub_category_id !== undefined ? { sub_category_id } : {}),
+            ...(type !== undefined ? { type: Number(type) } : {}),
+            ...(level !== undefined ? { level: Number(level) } : {}),
+            ...(language !== undefined ? { language } : {}),
+            ...(status !== undefined ? { status } : {}),
+        });
+
+        if (Array.isArray(options)) {
+            if (options.length < 2 || options.length > 6) {
+                return res.status(400).json({
+                    success: false,
+                    message: "options must be an array of 2–6 items.",
+                });
+            }
+
+            await QuestionOption.destroy({ where: { question_id: question.id } });
+            await QuestionOption.bulkCreate(
+                options.map((option) => ({
+                    question_id: question.id,
+                    option_text: option.text ?? option.option_text ?? "",
+                    is_correct: Boolean(option.is_correct),
+                }))
+            );
+        }
+
+        const updated = await Question.findByPk(question.id, {
+            include: [
+                {
+                    model: QuestionOption,
+                    as: "options",
+                    attributes: ["id", "option_text", "is_correct"],
+                },
+            ],
+        });
+
+        return res.json({
+            success: true,
+            message: "Question updated successfully.",
+            data: {
+                id: updated.id,
+                title: updated.title,
+                category_id: updated.category_id,
+                sub_category_id: updated.sub_category_id,
+                language: updated.language,
+                type: updated.type,
+                level: updated.level,
+                status: updated.status,
+                options: updated.options.map((option) => ({
+                    id: option.id,
+                    text: option.option_text,
+                    is_correct: option.is_correct,
+                })),
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+const deleteQuestion = async (req, res) => {
+    try {
+        const question = await Question.findByPk(req.params.id);
+
+        if (!question) {
+            return res.status(404).json({
+                success: false,
+                message: "Question not found.",
+            });
+        }
+
+        await QuestionOption.destroy({ where: { question_id: question.id } });
+        await question.destroy();
+
+        return res.json({
+            success: true,
+            message: "Question deleted successfully.",
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
     createQuestion,
+    createManualQuestion,
     getQuestions,
+    getQuestionById,
+    updateQuestion,
+    deleteQuestion,
 };
