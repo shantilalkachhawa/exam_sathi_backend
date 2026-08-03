@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
-const { User, Address } = require('../models');
+const { User, Address, Subscription, Roles } = require('../models');
 const { getUserIdFromToken } = require('../middlewares/http');
 // const Address = require('../models/address');
 
@@ -112,9 +112,9 @@ const userController = {
 
       const whereCondition = search ? {
         [Op.or]: [
-          { fullName: { [Op.like]: `%${search}%` } },
+          { full_name: { [Op.like]: `%${search}%` } },
           { email: { [Op.like]: `%${search}%` } },
-          { phoneNumber: { [Op.like]: `%${search}%` } },
+          { phone_number: { [Op.like]: `%${search}%` } },
         ]
       } : {};
 
@@ -123,7 +123,19 @@ const userController = {
         limit,
         offset,
         order: [[sortBy, order]],
-        // include: [{ model: Address, as: 'addresses' }],
+        distinct: true,
+        include: [
+          {
+            model: Subscription,
+            as: 'subscription',
+          },
+          {
+            model: Roles,
+            as: 'roles',
+            attributes: ['id', 'name', 'status'],
+            through: { attributes: ['status'] },
+          },
+        ],
       });
 
       res.status(200).json({
@@ -145,7 +157,10 @@ const userController = {
   getUserById: async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id, {
-        include: [{ model: Address }],
+        include: [
+          { model: Address },
+          { model: Subscription, as: 'subscription' },
+        ],
       });
       if (!user) return res.status(404).json({ error: 'User not found' });
       res.json(user);

@@ -13,6 +13,7 @@
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dayjs": "^1.11.21",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "fs-extra": "^11.3.6",
@@ -24,7 +25,6 @@
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^2.4.5",
     "pdf-poppler": "^0.2.3",
-
     "razorpay": "^2.9.6",
     "sequelize": "^6.37.7",
     "sharp": "^0.34.5",

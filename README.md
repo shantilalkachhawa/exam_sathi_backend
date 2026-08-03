@@ -162,3 +162,56 @@ npm run dev
 ```bash
 npm start
 ```
+
+
+User subscriptions (/api/user-subscriptions)
+Method	Path	Notes
+POST
+/purchase
+Paid/manual; overlap check; renews expired same plan
+POST
+/free
+No payment row
+POST
+/trial
+Once per user; no payment
+GET
+/my
+All history
+GET
+/active
+Non-expired only
+PUT
+/renew/:id
+Extend expiry
+DELETE
+/:id
+Cancel
+Payments (/api/payments)
+Method	Path	Notes
+POST
+/order
+Creates pending payment
+POST
+/verify
+Success → activates subscription
+POST
+/fail
+Marks failed
+POST
+/manual
+Offline success + activate
+GET
+/my
+History
+GET
+/:id
+Single payment
+Purchase body stays:
+
+{
+  "subscription_id": 1,
+  "payment_method": "razorpay",
+  "transaction_id": "pay_xxxxxxxxx"
+}
+Gateway flow: POST /payments/order → gateway → POST /payments/verify with { payment_id, transaction_id }.

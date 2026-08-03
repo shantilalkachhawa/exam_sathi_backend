@@ -12,6 +12,10 @@ module.exports = ({
   TestRanking,
   Roles,
   UserRoles,
+  Subscription,
+  SubscriptionAccess,
+  UserSubscription,
+  Payment,
 }) => {
 
   /* ===========================
@@ -58,6 +62,20 @@ UserRoles.belongsTo(User, {
 User.hasMany(UserRoles, {
   foreignKey: "user_id",
   as: "userRoles",
+});
+
+/* ===========================
+   Subscription -> User
+=========================== */
+
+Subscription.hasMany(User, {
+  foreignKey: "subscription_id",
+  as: "users",
+});
+
+User.belongsTo(Subscription, {
+  foreignKey: "subscription_id",
+  as: "subscription",
 });
 
 /* ===========================
@@ -330,5 +348,68 @@ Roles.hasMany(UserRoles, {
   TestRanking.belongsTo(PracticeTest, {
     foreignKey: "test_id",
     as: "practiceTest",
+  });
+
+  /* ===========================
+      Subscription Access
+  =========================== */
+
+  Subscription.hasMany(SubscriptionAccess, {
+    foreignKey: "subscription_id",
+    as: "access",
+    onDelete: "CASCADE",
+  });
+
+  SubscriptionAccess.belongsTo(Subscription, {
+    foreignKey: "subscription_id",
+    as: "subscription",
+  });
+
+  /* ===========================
+      User Subscriptions
+  =========================== */
+
+  Subscription.hasMany(UserSubscription, {
+    foreignKey: "subscription_id",
+    as: "userSubscriptions",
+  });
+
+  UserSubscription.belongsTo(Subscription, {
+    foreignKey: "subscription_id",
+    as: "subscription",
+  });
+
+  User.hasMany(UserSubscription, {
+    foreignKey: "user_id",
+    as: "userSubscriptions",
+  });
+
+  UserSubscription.belongsTo(User, {
+    foreignKey: "user_id",
+    as: "user",
+  });
+
+  /* ===========================
+      Payments
+  =========================== */
+
+  User.hasMany(Payment, {
+    foreignKey: "user_id",
+    as: "payments",
+  });
+
+  Payment.belongsTo(User, {
+    foreignKey: "user_id",
+    as: "user",
+  });
+
+  Subscription.hasMany(Payment, {
+    foreignKey: "subscription_id",
+    as: "payments",
+  });
+
+  Payment.belongsTo(Subscription, {
+    foreignKey: "subscription_id",
+    as: "subscription",
   });
 };

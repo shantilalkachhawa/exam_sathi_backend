@@ -31,6 +31,9 @@ const roleRoutes = require("./routes/roleRoute");
 const categoryRoutes = require("./routes/categoryRoutes");
 const practiceTestRoutes = require("./routes/practiceTestRoutes");
 const testAttemptRoutes = require("./routes/test-attempts");
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
+const userSubscriptionRoutes = require("./routes/userSubscription.routes");
+const paymentRoutes = require("./routes/payment.routes");
 
 app.use("/api/test-attempts", testAttemptRoutes);
 
@@ -38,9 +41,11 @@ app.use("/api/practice-test", practiceTestRoutes);
 
 app.use("/api/categories", categoryRoutes);
 app.use("/api/roles", roleRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
+app.use("/api/user-subscriptions", userSubscriptionRoutes);
+app.use("/api/payments", paymentRoutes);
 app.use('/api/questions', questionsRoute);
 
-// app.use('/api/payment', paymentRoute);
 app.use('/api', usersRoute);
 
 // --- Razorpay Config ---  

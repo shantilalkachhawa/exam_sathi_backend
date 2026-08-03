@@ -13,6 +13,10 @@ const UserAnswer = require("./userAnswer");
 const TestRanking = require("./testRanking");
 const Roles = require("./role");
 const UserRoles = require("./userRole");
+const Subscription = require("./subscription");
+const SubscriptionAccess = require("./subscriptionAccess");
+const UserSubscription = require("./userSubscription");
+const Payment = require("./payment");
 
 const applyAssociations = require("../middlewares/associations");
 
@@ -31,6 +35,10 @@ applyAssociations({
   TestRanking,
   Roles,
   UserRoles,
+  Subscription,
+  SubscriptionAccess,
+  UserSubscription,
+  Payment,
 });
 
 module.exports = {
@@ -48,4 +56,8 @@ module.exports = {
   TestRanking,
   Roles,
   UserRoles,
+  Subscription,
+  SubscriptionAccess,
+  UserSubscription,
+  Payment,
 };

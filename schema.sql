@@ -132,12 +132,38 @@ CREATE TABLE test_questions (
 CREATE TABLE subscriptions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(150) NOT NULL,
-    price NUMERIC(10,2) NOT NULL,
-    total_test INT NOT NULL,
-    validity_days INT NOT NULL,
-    subscription_type SMALLINT DEFAULT 1, -- 1=Monthly,2=Yearly
     description TEXT,
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    access_type VARCHAR(20) NOT NULL
+        CHECK(access_type IN ('free','trial','paid')),
+    plan_type VARCHAR(30) NOT NULL
+        CHECK(plan_type IN (
+            'monthly',
+            'quarterly',
+            'half_yearly',
+            'yearly',
+            'lifetime'
+        )),
+    price NUMERIC(10,2) DEFAULT 0,
+    validity_days INT,
+    total_test INT DEFAULT 0,
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE subscription_access (
+
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    subscription_id UUID NOT NULL
+        REFERENCES subscriptions(id)
+        ON DELETE CASCADE,
+    access_type VARCHAR(30)
+        CHECK(access_type IN (
+            'category',
+            'sub_category'
+        )),
+    access_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -146,14 +172,16 @@ CREATE TABLE subscriptions (
 -- USER SUBSCRIPTIONS
 -------------------------------------------------
 CREATE TABLE user_subscriptions (
+
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    subscription_id UUID NOT NULL REFERENCES subscriptions(id),
+    user_id UUID REFERENCES users(id),
+    subscription_id UUID REFERENCES subscriptions(id),
+    amount_paid NUMERIC(10,2),
+    purchased_at TIMESTAMP,
+    expiry_date TIMESTAMP,
     test_used INT DEFAULT 0,
-    purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expiry_date TIMESTAMP NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    status BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -162,18 +190,16 @@ CREATE TABLE user_subscriptions (
 -- PAYMENTS
 -------------------------------------------------
 CREATE TABLE payments (
+
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    subscription_id UUID NOT NULL REFERENCES subscriptions(id),
-    amount NUMERIC(10,2) NOT NULL,
-    payment_status SMALLINT DEFAULT 0, -- 0=pending,1=success,2=failed
-    payment_method VARCHAR(150),
-    transaction_id VARCHAR(255),
-    payment_gateway_response JSONB,
+    user_id UUID REFERENCES users(id),
+    subscription_id UUID REFERENCES subscriptions(id),
+    amount NUMERIC(10,2),
+    payment_status VARCHAR(20),
+    payment_method VARCHAR(50),
+    transaction_id VARCHAR(200),
     paid_at TIMESTAMP,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -------------------------------------------------

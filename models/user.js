@@ -45,10 +45,10 @@ const UserModel = sequelize.define('Users', {
     defaultValue: 'web',
    
   },
-  // subscription_id: {
-  //   type: DataTypes.STRING,
-  //   allowNull: true,
-  // },
+  subscription_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.ENUM('active', 'inactive', 'suspended','locked'),
     defaultValue: 'active', // 1 -> Active 2 -> In-active
