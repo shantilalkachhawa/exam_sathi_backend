@@ -2,29 +2,36 @@ const express = require("express");
 const router = express.Router();
 
 const testAttemptController = require("../controllers/testAttemptController");
-// const authMiddleware = require("../middleware/auth"); // JWT middleware
+const { verifyToken } = require("../middlewares/http");
 
 // Student starts a test
-router.post("/start", testAttemptController.startTest);
+router.post("/start", verifyToken, testAttemptController.startTest);
 
-// Get all questions of an attempt
-router.get("/:id/questions",testAttemptController.getAttemptQuestions);
-
-// Save/Update one answer (Auto Save)
-router.post("/:id/save-answer",testAttemptController.saveAnswer);
-
-// Submit Test
-router.post("/:id/submit",testAttemptController.submitTest);
-
-// Result
-router.get( "/:id/result",
-testAttemptController.getResult
+// History (before /:id routes)
+router.get(
+  "/my-attempts",
+  verifyToken,
+  testAttemptController.getMyAttempts
 );
 
-// Logged-in user's attempts
-// router.get(
-//   "/my-attempts",
-//   testAttemptController.getMyAttempts
-// );
+// Get all questions of an attempt
+router.get(
+  "/:id/questions",
+  verifyToken,
+  testAttemptController.getAttemptQuestions
+);
+
+// Save/Update one answer (Auto Save)
+router.post(
+  "/:id/save-answer",
+  verifyToken,
+  testAttemptController.saveAnswer
+);
+
+// Submit Test
+router.post("/:id/submit", verifyToken, testAttemptController.submitTest);
+
+// Result
+router.get("/:id/result", verifyToken, testAttemptController.getResult);
 
 module.exports = router;

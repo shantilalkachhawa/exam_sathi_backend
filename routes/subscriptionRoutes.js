@@ -2,10 +2,22 @@ const express = require("express");
 
 const router = express.Router();
 
+const { verifyToken } = require("../middlewares/http");
 const subscriptionController = require("../controllers/subscriptionController");
 
 // Create
 router.post("/", subscriptionController.createSubscription);
+
+// Admin assign plan to user (must be before /:id)
+router.post("/assign", subscriptionController.assignSubscriptionToUser);
+
+// Mobile catalog + unlocked access (before /:id)
+router.get("/catalog", subscriptionController.getSubscriptionCatalog);
+router.get(
+    "/my-access",
+    verifyToken,
+    subscriptionController.getMyUnlockedAccess
+);
 
 // List
 router.get("/", subscriptionController.getSubscriptions);

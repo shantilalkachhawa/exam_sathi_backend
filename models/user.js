@@ -22,13 +22,13 @@ const UserModel = sequelize.define('Users', {
     allowNull: true,
     // unique:true
   },
-  gender:{
+  gender: {
     type: DataTypes.STRING,
     allowNull: true
   },
   image_url: {
     type: DataTypes.STRING,
-    allowNull: true   
+    allowNull: true
   },
   password: {
     type: DataTypes.STRING,
@@ -39,18 +39,18 @@ const UserModel = sequelize.define('Users', {
     defaultValue: false,
     allowNull: true
   },
-  user_type: {// regSource
-    type: DataTypes.ENUM( 'web', 'mobile', 'vendor'),
+  user_type: { // regSource
+    type: DataTypes.ENUM('web', 'mobile', 'vendor'),
     allowNull: false,
     defaultValue: 'web',
-   
+
   },
   subscription_id: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
   status: {
-    type: DataTypes.ENUM('active', 'inactive', 'suspended','locked'),
+    type: DataTypes.ENUM('active', 'inactive', 'suspended', 'locked'),
     defaultValue: 'active', // 1 -> Active 2 -> In-active
     allowNull: true,
 

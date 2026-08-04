@@ -8,6 +8,9 @@ const { otpVerifySchema, signupSchema, loginSchema } = require('../validators/us
 
 router.post('/signup', validateRequest(signupSchema), userController.createUser);
 router.post('/login', validateRequest(loginSchema), userController.loginUser);
+router.post("/refresh-token", authController.refreshToken);
+
+router.post("/logout", authController.logout);
 router.post('/otp-verify', validateRequest(otpVerifySchema), userController.otpVerify);
 // router.get('/users', verifyToken, isAdmin, userController.getAllUsers);
 router.get('/users', userController.getAllUsers);

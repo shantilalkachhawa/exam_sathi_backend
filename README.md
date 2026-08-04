@@ -215,3 +215,214 @@ Purchase body stays:
   "transaction_id": "pay_xxxxxxxxx"
 }
 Gateway flow: POST /payments/order → gateway → POST /payments/verify with { payment_id, transaction_id }.
+
+
+
+
+How the 3 pieces relate
+1) Subscription (PLAN)
+   = product you sell (Monthly PCS, Free Trial, etc.)
+   + SubscriptionAccess = which categories/subcategories that plan unlocks
+2) Payment
+   = money record (pending → success / failed)
+   linked to user + subscription
+3) UserSubscription
+   = user actually owns the plan (active / expired / cancelled)
+   created AFTER payment success (or free/trial/admin assign)
+Flow:
+
+Create Plan → Map Access → User buys / Admin assigns
+                              ↓
+                         Payment (if paid)
+                              ↓
+                      UserSubscription active
+                              ↓
+                    User can access mapped categories
+Important: purchase fails if the plan has no access mappings. First call:
+
+POST /api/subscriptions/:id/access
+
+1) Subscription (plan APIs)
+Base: /api/subscriptions
+Auth: not required currently
+
+Method	Path	Body / Query
+POST
+/
+create plan
+GET
+/?page=1&limit=10&search=
+list + access
+GET
+/:id
+one plan
+PUT
+/:id
+update fields
+DELETE
+/:id
+soft delete (inactive)
+POST
+/:id/access
+map category/subcategory
+GET
+/:id/access
+list access
+DELETE
+/:id/access/:accessId
+remove access
+POST
+/assign
+admin assign plan to user (new)
+Create plan
+
+POST /api/subscriptions
+{
+  "name": "Monthly PCS",
+  "description": "PCS monthly plan",
+  "access_type": "paid",
+  "plan_type": "monthly",
+  "price": 499,
+  "validity_days": 30,
+  "total_test": 50
+}
+access_type: free | paid | trial
+plan_type: monthly | quarterly | half_yearly | yearly | lifetime | trial | custom
+
+Map access (required before purchase)
+
+POST /api/subscriptions/2/access
+{
+  "access_level": "category",
+  "access_id": "1"
+}
+or
+
+{
+  "access_level": "sub_category",
+  "access_id": "5"
+}
+Admin assign to user
+
+POST /api/subscriptions/assign
+{
+  "user_id": 5,
+  "subscription_id": 2,
+  "payment_method": "manual",
+  "transaction_id": "ADMIN-001"
+}
+If plan is paid → creates success payment + userSubscription
+If free/trial → only userSubscription (amount 0)
+2) Payment APIs
+Base: /api/payments
+All need: Authorization: Bearer <user_jwt>
+
+Method	Path	Purpose
+POST
+/order
+create pending payment (gateway checkout)
+POST
+/verify
+mark success → activate plan
+POST
+/fail
+mark failed
+POST
+/manual
+offline success + activate (for logged-in user)
+GET
+/
+admin list all payments
+GET
+/my
+my payments
+GET
+/:id
+one payment
+Gateway flow (app user)
+
+POST /api/payments/order
+{ "subscription_id": 2, "payment_method": "razorpay" }
+→ returns pending payment
+
+POST /api/payments/verify
+{
+  "payment_id": 10,
+  "transaction_id": "pay_xxx",
+  "gateway_response": { "razorpay_payment_id": "pay_xxx" }
+}
+→ payment success + UserSubscription created
+
+POST /api/payments/fail
+{ "payment_id": 10 }
+Manual for logged-in user
+
+POST /api/payments/manual
+{
+  "subscription_id": 2,
+  "payment_method": "cash",
+  "transaction_id": "CASH-123"
+}
+3) UserSubscription APIs
+Base: /api/user-subscriptions
+All need Bearer token (most act on logged-in user)
+
+Method	Path	Body	When
+POST
+/purchase
+{ subscription_id, payment_method?, transaction_id? }
+paid plan, instant success payment
+POST
+/free
+{ subscription_id }
+access_type = free
+POST
+/trial
+{ subscription_id }
+trial (once per user)
+GET
+/my
+—
+all my plans
+GET
+/active
+—
+currently active
+GET
+/
+?page&limit&status&search
+admin list all
+PUT
+/renew/:id
+—
+renew by user_subscription id
+DELETE
+/:id
+—
+cancel
+Examples
+
+POST /api/user-subscriptions/purchase
+{ "subscription_id": 2, "payment_method": "upi", "transaction_id": "UPI999" }
+POST /api/user-subscriptions/free
+{ "subscription_id": 3 }
+POST /api/user-subscriptions/trial
+{ "subscription_id": 4 }
+Which API should you use?
+Goal	Use
+Create plan
+POST /subscriptions
+Unlock categories for plan
+POST /subscriptions/:id/access
+Admin give plan to a user
+POST /subscriptions/assign
+App user pays via Razorpay
+/payments/order → gateway → /payments/verify
+App user paid instantly (no gateway)
+POST /user-subscriptions/purchase
+Free / trial
+/user-subscriptions/free or /trial
+See all payments
+GET /payments
+See all user plans
+GET /user-subscriptions

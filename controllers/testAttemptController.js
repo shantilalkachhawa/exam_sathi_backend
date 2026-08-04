@@ -6,6 +6,8 @@ const {
   Question,
   QuestionOption,
   UserAnswer,
+  Category,
+  SubCategory,
 } = require("../models");
 const {
   calculateRemainingSeconds,
@@ -20,9 +22,8 @@ exports.startTest = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
-    const { pt_id, user_id } = req.body;
-    // const user_id = req.user.id || 1;
-    // const user_id =  1;
+    const { pt_id } = req.body;
+    const user_id = req.user?.id || req.body.user_id;
 
     console.log("user_id", pt_id, user_id)
 
@@ -33,6 +34,14 @@ exports.startTest = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Practice Test Id is required.",
+      });
+    }
+
+    if (!user_id) {
+      await transaction.rollback();
+      return res.status(401).json({
+        success: false,
+        message: "User is required.",
       });
     }
 
@@ -302,11 +311,9 @@ exports.saveAnswer = async (req, res) => {
     const {
       question_id,
       option_id,
-      user_id
     } = req.body;
 
-    // const userId = req.user.id;
-    const userId = user_id;
+    const userId = Number(req.user?.id || req.body.user_id);
 
     if (!question_id || !option_id) {
       await transaction.rollback();
@@ -314,6 +321,14 @@ exports.saveAnswer = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "question_id and option_id are required.",
+      });
+    }
+
+    if (!userId) {
+      await transaction.rollback();
+      return res.status(401).json({
+        success: false,
+        message: "User is required.",
       });
     }
 
@@ -331,7 +346,7 @@ exports.saveAnswer = async (req, res) => {
       });
     }
 
-    if (attempt.user_id !== userId) {
+    if (Number(attempt.user_id) !== userId) {
       await transaction.rollback();
 
       return res.status(403).json({
@@ -465,7 +480,15 @@ exports.submitTest = async (req, res) => {
   try {
 
     const attemptId = req.params.id;
-    const userId = req.body.user_id;
+    const userId = Number(req.user?.id || req.body.user_id);
+
+    if (!userId) {
+      await transaction.rollback();
+      return res.status(401).json({
+        success: false,
+        message: "User is required.",
+      });
+    }
 
     // Get Attempt
     const attempt = await TestAttempt.findByPk(attemptId, {
@@ -482,7 +505,7 @@ exports.submitTest = async (req, res) => {
     }
 
     // Security
-    if (attempt.user_id !== userId) {
+    if (Number(attempt.user_id) !== userId) {
       await transaction.rollback();
 
       return res.status(403).json({
@@ -655,7 +678,14 @@ exports.getResult = async (req, res) => {
   try {
 
     const attemptId = req.params.id;
-    const userId = req.user.id;
+    const userId = Number(req.user?.id || req.query.user_id || req.body?.user_id);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User is required.",
+      });
+    }
 
     // Get Attempt
     const attempt = await TestAttempt.findByPk(attemptId);
@@ -668,7 +698,7 @@ exports.getResult = async (req, res) => {
     }
 
     // Security
-    if (attempt.user_id !== userId) {
+    if (Number(attempt.user_id) !== userId) {
       return res.status(403).json({
         success: false,
         message: "Unauthorized.",
@@ -807,7 +837,14 @@ exports.getResult = async (req, res) => {
 exports.getMyAttempts = async (req, res) => {
   try {
 
-    const userId = req.user.id;
+    const userId = Number(req.user?.id || req.query.user_id);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User is required.",
+      });
+    }
 
     const attempts = await TestAttempt.findAll({
 
@@ -824,7 +861,7 @@ exports.getMyAttempts = async (req, res) => {
             {
               model: Category,
               as: "category",
-              attributes: ["id", "name"],
+              attributes: ["id", "category_name"],
             },
             {
               model: SubCategory,
@@ -839,11 +876,13 @@ exports.getMyAttempts = async (req, res) => {
             "duration_minutes",
             "total_questions",
             "total_marks",
+            "category_id",
+            "sub_category_id",
           ],
         },
       ],
 
-      order: [["createdAt", "DESC"]],
+      order: [["id", "DESC"]],
 
     });
 
@@ -851,7 +890,7 @@ exports.getMyAttempts = async (req, res) => {
 
       let remainingSeconds = 0;
 
-      if (attempt.status === "in_progress") {
+      if (attempt.status === "in_progress" && attempt.practiceTest) {
 
         remainingSeconds = calculateRemainingSeconds(
           attempt.started_at,
@@ -859,6 +898,8 @@ exports.getMyAttempts = async (req, res) => {
         );
 
       }
+
+      const pt = attempt.practiceTest;
 
       return {
 
@@ -890,28 +931,37 @@ exports.getMyAttempts = async (req, res) => {
 
         accuracy: attempt.accuracy,
 
-        practice_test: {
+        time_taken: attempt.time_taken,
 
-          id: attempt.practiceTest.id,
+        practice_test: pt
+          ? {
 
-          title: attempt.practiceTest.title,
+            id: pt.id,
 
-          duration_minutes:
-            attempt.practiceTest.duration_minutes,
+            title: pt.title,
 
-          total_questions:
-            attempt.practiceTest.total_questions,
+            duration_minutes: pt.duration_minutes,
 
-          total_marks:
-            attempt.practiceTest.total_marks,
+            total_questions: pt.total_questions,
 
-          category:
-            attempt.practiceTest.category,
+            total_marks: pt.total_marks,
 
-          sub_category:
-            attempt.practiceTest.subCategory,
+            category: pt.category
+              ? {
+                id: pt.category.id,
+                name: pt.category.category_name,
+              }
+              : null,
 
-        },
+            sub_category: pt.subCategory
+              ? {
+                id: pt.subCategory.id,
+                name: pt.subCategory.name,
+              }
+              : null,
+
+          }
+          : null,
 
       };
 

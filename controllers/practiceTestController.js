@@ -17,24 +17,45 @@ const {
         question_ids = [],
         ...testData
       } = req.body;
-      
-     
-      if (question_ids.length) {
-      const practiceTest = await PracticeTest.create({...testData,total_questions: question_ids.length});
-      
-        const mappings = question_ids.map((question_id) => ({
-          pt_id: practiceTest.id,
-          question_id,
-        }));
 
-        await TestQuestion.bulkCreate(mappings);
-        
-        return res.status(201).json({
-          success: true,
-          message: "Practice Test created successfully.",
-          data: practiceTest,
+      if (!testData.category_id) {
+        return res.status(400).json({
+          success: false,
+          message: "category_id is required",
         });
       }
+
+      if (!testData.sub_category_id) {
+        return res.status(400).json({
+          success: false,
+          message: "sub_category_id is required so mobile users can see this test under a subcategory",
+        });
+      }
+
+      if (!question_ids.length) {
+        return res.status(400).json({
+          success: false,
+          message: "question_ids are required",
+        });
+      }
+
+      const practiceTest = await PracticeTest.create({
+        ...testData,
+        total_questions: question_ids.length,
+      });
+
+      const mappings = question_ids.map((question_id) => ({
+        pt_id: practiceTest.id,
+        question_id,
+      }));
+
+      await TestQuestion.bulkCreate(mappings);
+
+      return res.status(201).json({
+        success: true,
+        message: "Practice Test created successfully.",
+        data: practiceTest,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -61,8 +82,10 @@ exports.getPracticeTests = async (req, res) => {
           as: "subCategory",
         },
         {
+          // List only needs question ids (not full question payload)
           model: Question,
           as: "questions",
+          attributes: ["id"],
           through: {
             attributes: [],
           },
