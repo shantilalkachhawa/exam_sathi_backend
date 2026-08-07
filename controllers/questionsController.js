@@ -239,7 +239,11 @@ const getQuestions = async (req, res) => {
         if (level) where.level = level;
         if (type) where.type = type;
 
-        const { count, rows } = await Question.findAndCountAll({
+        // Count questions alone — including hasMany "options" in findAndCountAll
+        // inflates count (question × options) and breaks later pages (empty data).
+        const totalQuestions = await Question.count({ where });
+
+        const rows = await Question.findAll({
             where,
             include: [
                 {
@@ -263,7 +267,7 @@ const getQuestions = async (req, res) => {
             type: question.type,
             level: question.level,
             status: question.status,
-            options: question.options.map((option) => ({
+            options: (question.options || []).map((option) => ({
                 id: option.id,
                 text: option.option_text,
                 is_correct: option.is_correct,
@@ -272,9 +276,9 @@ const getQuestions = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            totalQuestions: count,
+            totalQuestions,
             currentPage: pageNumber,
-            totalPages: Math.ceil(count / pageSize),
+            totalPages: Math.max(1, Math.ceil(totalQuestions / pageSize)),
             data,
         });
     } catch (error) {

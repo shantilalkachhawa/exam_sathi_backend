@@ -20,7 +20,7 @@ function getUserIdFromToken(req) {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    return decoded.userId;
+    return decoded.userId ?? decoded.id;
   } catch (error) {
     console.error('Token decode error:', error.message);
     return null;
@@ -38,7 +38,13 @@ function verifyToken(req, res, next) {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    req.user = { id: decoded.userId }; // attach decoded userId to request
+    // Keep backward compatibility:
+    // - existing access tokens might carry { userId, role }
+    // - some older tokens might carry { id }
+    req.user = {
+      id: decoded.userId ?? decoded.id,
+      userType: decoded.role ?? decoded.userType ?? decoded.user_type,
+    };
 
     next(); // pass control to next middleware/route
   } catch (error) {
