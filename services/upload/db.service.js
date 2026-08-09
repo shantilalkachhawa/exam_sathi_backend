@@ -2,6 +2,7 @@
 
 const { sequelize, Question, QuestionOption } = require("../../models");
 const { resolveQuestionType } = require("./questionTypes");
+const { stripExamSourceTags, cleanOCRText } = require("../../utils/regex");
 
 /**
  * Save all parsed questions into DB.
@@ -9,8 +10,9 @@ const { resolveQuestionType } = require("./questionTypes");
  */
 async function saveQuestions({
     questions,
-    category_id,
-    sub_category_id,
+    category_id = null,
+    sub_category_id = null,
+    subject_id = null,
     created_by,
     type = 1,
     level = 1,
@@ -26,15 +28,18 @@ async function saveQuestions({
 
         for (const item of questions) {
             const optionCount = item.options?.length || 0;
+            const title = stripExamSourceTags(
+                cleanOCRText(String(item.title || ""))
+            );
 
-            if (!item.title || optionCount < 2 || optionCount > 6) {
+            if (!title || optionCount < 2 || optionCount > 6) {
                 invalid++;
                 failedQuestions.push({
                     questionNo: item.questionNo,
-                    reason: !item.title
+                    reason: !title
                         ? "Missing title"
                         : `Expected 2–6 options, got ${optionCount}`,
-                    title: item.title || null,
+                    title: title || null,
                     options: item.options || [],
                 });
                 continue;
@@ -44,9 +49,10 @@ async function saveQuestions({
 
             const question = await Question.create(
                 {
-                    category_id,
-                    sub_category_id,
-                    title: item.title,
+                    category_id: category_id || null,
+                    sub_category_id: sub_category_id || null,
+                    subject_id: subject_id || null,
+                    title,
                     language: item.language || language,
                     type: questionType,
                     level,

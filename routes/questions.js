@@ -3,8 +3,19 @@ const router = express.Router();
 const controller = require("../controllers/questionsController");
 const multer = require("../middlewares/multer");
 
-// PDF/image OCR import
-router.post("/", multer.single("file"), controller.createQuestion);
+const uploadFields = multer.fields([
+  { name: "file", maxCount: 1 },
+  { name: "answer_file", maxCount: 1 },
+]);
+
+// Scan PDF → preview (no DB insert)
+router.post("/parse-preview", uploadFields, controller.previewQuestionsFromPdf);
+
+// Insert questions from preview JSON
+router.post("/import-parsed", controller.importParsedQuestions);
+
+// PDF/image OCR import (+ optional answer key PDF) — one-shot
+router.post("/", uploadFields, controller.createQuestion);
 
 // Manual JSON create (admin portal)
 router.post("/manual", controller.createManualQuestion);

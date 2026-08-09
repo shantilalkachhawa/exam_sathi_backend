@@ -9,8 +9,18 @@ const Question = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    category_id: DataTypes.INTEGER,
-    sub_category_id: DataTypes.INTEGER,
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    sub_category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    subject_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     title: {
       type: DataTypes.TEXT,
       allowNull: false,

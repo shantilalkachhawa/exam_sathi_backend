@@ -19,6 +19,8 @@ const UserSubscription = require("./userSubscription");
 const Payment = require("./payment");
 const CurrentAffair = require("./currentAffair");
 const PreviousYearPaper = require("./previousYearPaper");
+const Subject = require("./subject");
+const PracticeTestSection = require("./practiceTestSection");
 
 const applyAssociations = require("../middlewares/associations");
 
@@ -43,6 +45,8 @@ applyAssociations({
   Payment,
   CurrentAffair,
   PreviousYearPaper,
+  Subject,
+  PracticeTestSection,
 });
 
 module.exports = {
@@ -66,4 +70,6 @@ module.exports = {
   Payment,
   CurrentAffair,
   PreviousYearPaper,
+  Subject,
+  PracticeTestSection,
 };

@@ -18,7 +18,7 @@ async function createTempDirectory() {
 
 }
 
-async function convertPDFToImages(pdfPath) {
+async function convertPDFToImages(pdfPath, { dpi } = {}) {
 
     const outputDir = await createTempDirectory();
 
@@ -32,7 +32,7 @@ async function convertPDFToImages(pdfPath) {
 
         page: null,
 
-        dpi: 300
+        dpi: Number(dpi) > 0 ? Number(dpi) : 300
 
     };
 

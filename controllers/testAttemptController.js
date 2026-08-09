@@ -1,6 +1,7 @@
 const {
   sequelize,
   PracticeTest,
+  PracticeTestSection,
   TestAttempt,
   TestQuestion,
   Question,
@@ -8,6 +9,7 @@ const {
   UserAnswer,
   Category,
   SubCategory,
+  Subject,
 } = require("../models");
 const {
   calculateRemainingSeconds,
@@ -210,34 +212,38 @@ exports.getAttemptQuestions = async (req, res) => {
       });
     }
 
-    // Load all questions
+    // Load all questions (ordered for sectional + flat tests)
     const testQuestions = await TestQuestion.findAll({
       where: {
         pt_id: attempt.pt_id,
       },
-
       include: [
         {
           model: Question,
           as: "question",
-
           include: [
             {
               model: QuestionOption,
               as: "options",
-
-              attributes: [
-                "id",
-                "option_text",
-              ],
+              attributes: ["id", "option_text"],
+            },
+            {
+              model: Subject,
+              as: "subject",
+              attributes: ["id", "name", "code"],
             },
           ],
         },
+        {
+          model: PracticeTestSection,
+          as: "section",
+          attributes: ["id", "name", "section_order", "subject_id", "question_count"],
+        },
       ],
-
-      // order: [
-      //   ["question_order", "ASC"],
-      // ],
+      order: [
+        ["question_order", "ASC"],
+        ["id", "ASC"],
+      ],
     });
 
     // Load saved answers
@@ -253,40 +259,72 @@ exports.getAttemptQuestions = async (req, res) => {
       answerMap[answer.question_id] = answer.option_id;
     });
 
-    const questions = testQuestions.map((item) => ({
+    const questions = testQuestions.map((item, index) => ({
       question_id: item.question.id,
       title: item.question.title,
       type: item.question.type,
       level: item.question.level,
-
-      selected_option:
-        answerMap[item.question.id] || null,
-
-      status: answerMap[item.question.id]
-        ? "answered"
-        : "not_answered",
-
+      question_order: item.question_order || index + 1,
+      section_id: item.section_id || item.section?.id || null,
+      section_name: item.section?.name || null,
+      subject_id: item.question.subject_id || item.question.subject?.id || null,
+      subject_name: item.question.subject?.name || null,
+      selected_option: answerMap[item.question.id] || null,
+      status: answerMap[item.question.id] ? "answered" : "not_answered",
       options: item.question.options,
     }));
 
+    const sectionMap = new Map();
+    questions.forEach((q, idx) => {
+      if (!q.section_id) return;
+      if (!sectionMap.has(q.section_id)) {
+        sectionMap.set(q.section_id, {
+          section_id: q.section_id,
+          name: q.section_name || "Section",
+          section_order: sectionMap.size + 1,
+          question_count: 0,
+          start_index: idx,
+          answered_count: 0,
+        });
+      }
+      const sec = sectionMap.get(q.section_id);
+      sec.question_count += 1;
+      if (q.selected_option != null) sec.answered_count += 1;
+    });
+
+    // Prefer DB section order when available
+    const dbSections = await PracticeTestSection.findAll({
+      where: { pt_id: attempt.pt_id },
+      order: [["section_order", "ASC"]],
+    });
+
+    const sections =
+      dbSections.length > 0
+        ? dbSections.map((s) => {
+            const startIndex = questions.findIndex((q) => q.section_id === s.id);
+            const inSection = questions.filter((q) => q.section_id === s.id);
+            return {
+              section_id: s.id,
+              name: s.name,
+              section_order: s.section_order,
+              question_count: inSection.length || s.question_count,
+              start_index: startIndex >= 0 ? startIndex : 0,
+              answered_count: inSection.filter((q) => q.selected_option != null).length,
+            };
+          })
+        : Array.from(sectionMap.values());
+
     return res.status(200).json({
       success: true,
-
       data: {
         attempt_id: attempt.id,
-
         pt_id: practiceTest.id,
-
         title: practiceTest.title,
-
-        duration_minutes:
-          practiceTest.duration_minutes,
-
+        duration_minutes: practiceTest.duration_minutes,
         remaining_seconds: remainingSeconds,
-
-        total_questions:
-          practiceTest.total_questions,
-
+        total_questions: practiceTest.total_questions,
+        is_sectional: Boolean(practiceTest.is_sectional) || sections.length > 0,
+        sections,
         questions,
       },
     });

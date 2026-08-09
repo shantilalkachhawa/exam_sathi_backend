@@ -40,9 +40,7 @@ const currentAffairRoutes = require("./routes/currentAffairRoutes");
 const previousYearPaperRoutes = require("./routes/previousYearPaperRoutes");
 
 app.use("/api/test-attempts", testAttemptRoutes);
-
 app.use("/api/practice-test", practiceTestRoutes);
-
 app.use("/api/categories", categoryRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
@@ -50,20 +48,17 @@ app.use("/api/user-subscriptions", userSubscriptionRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/current-affairs", currentAffairRoutes);
 app.use("/api/previous-year-papers", previousYearPaperRoutes);
+app.use("/api/subjects", require("./routes/subjectRoutes"));
 app.use('/api/questions', questionsRoute);
-
 app.use('/api', usersRoute);
 
-// Ensure new tables exist
-const { CurrentAffair, PreviousYearPaper } = require("./models");
-CurrentAffair.sync({ alter: true })
-  .then(() => console.log("✅ current_affairs table ready"))
-  .catch((err) => console.error("❌ current_affairs sync error:", err.message));
-PreviousYearPaper.sync({ alter: true })
-  .then(() => console.log("✅ previous_year_papers table ready"))
-  .catch((err) => console.error("❌ previous_year_papers sync error:", err.message));
+
+// sequelize.sync({ alter: true })
+//   .then(() => console.log('✅ All tables created successfully!'))
+//   .catch(err => console.error('❌ Error creating tables:', err));
 
 // --- Start Server (Express + Socket.IO) ---
+
 const port = process.env.PORT || 4000;
 server.listen(port, () => {
   console.log(`Server (API + Socket.IO) is running on port ${port}`);

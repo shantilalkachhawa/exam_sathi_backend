@@ -1,6 +1,8 @@
 /**
  * Numeric question types stored in questions.type (SMALLINT)
  */
+const { stripExamSourceTags } = require("../../utils/regex");
+
 const QUESTION_TYPES = {
     mcq: 1,
     match: 2,
@@ -26,7 +28,7 @@ function resolveQuestionType(value, fallback = 1) {
  * Embed match lists into title so existing DB schema can store them.
  */
 function formatQuestionTitle(item) {
-    let title = (item.title || "").trim();
+    let title = stripExamSourceTags((item.title || "").trim());
 
     if (item.listI && item.listI.items) {
         const label = item.listI.label ? ` (${item.listI.label})` : "";

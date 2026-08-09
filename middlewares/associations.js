@@ -18,6 +18,8 @@ module.exports = ({
   Payment,
   CurrentAffair,
   PreviousYearPaper,
+  Subject,
+  PracticeTestSection,
 }) => {
 
   /* ===========================
@@ -135,6 +137,22 @@ Roles.hasMany(UserRoles, {
     foreignKey: "sub_category_id",
     as: "subCategory",
   });
+
+  /* ===========================
+      Subject -> Questions
+  =========================== */
+
+  if (Subject) {
+    Subject.hasMany(Question, {
+      foreignKey: "subject_id",
+      as: "questions",
+    });
+
+    Question.belongsTo(Subject, {
+      foreignKey: "subject_id",
+      as: "subject",
+    });
+  }
 
   /* ===========================
       User -> Questions
@@ -286,6 +304,45 @@ Roles.hasMany(UserRoles, {
     foreignKey: "question_id",
     as: "question",
   });
+
+  /* ===========================
+      Practice Test Sections
+  =========================== */
+
+  if (PracticeTestSection) {
+    PracticeTest.hasMany(PracticeTestSection, {
+      foreignKey: "pt_id",
+      as: "sections",
+      onDelete: "CASCADE",
+    });
+
+    PracticeTestSection.belongsTo(PracticeTest, {
+      foreignKey: "pt_id",
+      as: "practiceTest",
+    });
+
+    if (Subject) {
+      Subject.hasMany(PracticeTestSection, {
+        foreignKey: "subject_id",
+        as: "testSections",
+      });
+
+      PracticeTestSection.belongsTo(Subject, {
+        foreignKey: "subject_id",
+        as: "subject",
+      });
+    }
+
+    PracticeTestSection.hasMany(TestQuestion, {
+      foreignKey: "section_id",
+      as: "testQuestions",
+    });
+
+    TestQuestion.belongsTo(PracticeTestSection, {
+      foreignKey: "section_id",
+      as: "section",
+    });
+  }
 
   /* ===========================
       Many To Many

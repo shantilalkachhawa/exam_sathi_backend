@@ -11,6 +11,15 @@ const TestQuestion = sequelize.define(
     },
     pt_id: DataTypes.INTEGER,
     question_id: DataTypes.INTEGER,
+    section_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    question_order: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
+    },
   },
   {
     tableName: "test_questions",

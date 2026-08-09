@@ -28,6 +28,10 @@ const PracticeTest = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    is_sectional: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     created_by: DataTypes.INTEGER,
     status: {
       type: DataTypes.ENUM("active", "inactive"),
