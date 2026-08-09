@@ -17,6 +17,8 @@ const Subscription = require("./subscription");
 const SubscriptionAccess = require("./subscriptionAccess");
 const UserSubscription = require("./userSubscription");
 const Payment = require("./payment");
+const CurrentAffair = require("./currentAffair");
+const PreviousYearPaper = require("./previousYearPaper");
 
 const applyAssociations = require("../middlewares/associations");
 
@@ -39,6 +41,8 @@ applyAssociations({
   SubscriptionAccess,
   UserSubscription,
   Payment,
+  CurrentAffair,
+  PreviousYearPaper,
 });
 
 module.exports = {
@@ -60,4 +64,6 @@ module.exports = {
   SubscriptionAccess,
   UserSubscription,
   Payment,
+  CurrentAffair,
+  PreviousYearPaper,
 };

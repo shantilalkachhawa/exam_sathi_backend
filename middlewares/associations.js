@@ -16,6 +16,8 @@ module.exports = ({
   SubscriptionAccess,
   UserSubscription,
   Payment,
+  CurrentAffair,
+  PreviousYearPaper,
 }) => {
 
   /* ===========================
@@ -204,6 +206,58 @@ Roles.hasMany(UserRoles, {
     foreignKey: "created_by",
     as: "creator",
   });
+
+  /* ===========================
+      Current Affairs
+  =========================== */
+
+  if (CurrentAffair) {
+    User.hasMany(CurrentAffair, {
+      foreignKey: "created_by",
+      as: "createdCurrentAffairs",
+    });
+
+    CurrentAffair.belongsTo(User, {
+      foreignKey: "created_by",
+      as: "creator",
+    });
+  }
+
+  /* ===========================
+      Previous Year Papers
+  =========================== */
+
+  if (PreviousYearPaper) {
+    Category.hasMany(PreviousYearPaper, {
+      foreignKey: "category_id",
+      as: "previousYearPapers",
+    });
+
+    PreviousYearPaper.belongsTo(Category, {
+      foreignKey: "category_id",
+      as: "category",
+    });
+
+    SubCategory.hasMany(PreviousYearPaper, {
+      foreignKey: "sub_category_id",
+      as: "previousYearPapers",
+    });
+
+    PreviousYearPaper.belongsTo(SubCategory, {
+      foreignKey: "sub_category_id",
+      as: "subCategory",
+    });
+
+    User.hasMany(PreviousYearPaper, {
+      foreignKey: "created_by",
+      as: "createdPreviousYearPapers",
+    });
+
+    PreviousYearPaper.belongsTo(User, {
+      foreignKey: "created_by",
+      as: "creator",
+    });
+  }
 
   /* ===========================
       Practice Test -> Test Questions

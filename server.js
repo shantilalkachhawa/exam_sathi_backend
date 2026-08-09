@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors')
 const app = express();
 require('dotenv').config(); // Load .env
@@ -22,6 +23,7 @@ require('./controllers/socket')(io);
 
 // --- Express Middleware ---
 app.use(express.json()); // Parse JSON
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 
 // --- API Routes ---
@@ -34,6 +36,8 @@ const testAttemptRoutes = require("./routes/test-attempts");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
 const userSubscriptionRoutes = require("./routes/userSubscription.routes");
 const paymentRoutes = require("./routes/payment.routes");
+const currentAffairRoutes = require("./routes/currentAffairRoutes");
+const previousYearPaperRoutes = require("./routes/previousYearPaperRoutes");
 
 app.use("/api/test-attempts", testAttemptRoutes);
 
@@ -44,15 +48,20 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/user-subscriptions", userSubscriptionRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/current-affairs", currentAffairRoutes);
+app.use("/api/previous-year-papers", previousYearPaperRoutes);
 app.use('/api/questions', questionsRoute);
 
 app.use('/api', usersRoute);
 
-// --- Razorpay Config ---  
-// sequelize.sync({ alter: true })
-//   .then(() => console.log('✅ All tables created successfully!'))
-//   .catch(err => console.error('❌ Error creating tables:', err));
-
+// Ensure new tables exist
+const { CurrentAffair, PreviousYearPaper } = require("./models");
+CurrentAffair.sync({ alter: true })
+  .then(() => console.log("✅ current_affairs table ready"))
+  .catch((err) => console.error("❌ current_affairs sync error:", err.message));
+PreviousYearPaper.sync({ alter: true })
+  .then(() => console.log("✅ previous_year_papers table ready"))
+  .catch((err) => console.error("❌ previous_year_papers sync error:", err.message));
 
 // --- Start Server (Express + Socket.IO) ---
 const port = process.env.PORT || 4000;

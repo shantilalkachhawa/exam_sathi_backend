@@ -91,10 +91,58 @@ const cartSchema = Joi.object({
   deliveredDate: Joi.date().iso().required(),
 });
 
+const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.empty": "Email is required",
+    "string.email": "Email must be valid",
+  }),
+});
+
+const resetPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+  otp: Joi.string()
+    .pattern(/^\d{4}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "OTP must be a 4-digit number",
+    }),
+  hash: Joi.string().required(),
+  user_id: Joi.number().integer().required(),
+  new_password: Joi.string().min(6).required().messages({
+    "string.min": "New password must be at least 6 characters long",
+  }),
+});
+
+const changePasswordSchema = Joi.object({
+  current_password: Joi.string().required(),
+  new_password: Joi.string().min(6).required().messages({
+    "string.min": "New password must be at least 6 characters long",
+  }),
+});
+
+const updateProfileSchema = Joi.object({
+  full_name: Joi.string().min(2).max(100).optional(),
+  phone_number: Joi.string()
+    .pattern(/^\d{10}$/)
+    .allow("", null)
+    .optional(),
+  gender: Joi.string().allow("", null).optional(),
+  image_url: Joi.string().uri().allow("", null).optional(),
+}).min(1);
+
+const verifyUserSchema = Joi.object({
+  is_verified: Joi.boolean().required(),
+});
+
 module.exports = {
   otpVerifySchema,
   sendOtpSchema,
   loginSchema,
   signupSchema,
   cartSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
+  updateProfileSchema,
+  verifyUserSchema,
 };

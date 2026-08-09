@@ -104,7 +104,29 @@ const userController = {
         where: { email: normalizedEmail },
       });
       if (existingEmail) {
-        return res.status(409).json({ error: "Email already exists" });
+        // Unverified account → resend OTP instead of hard "email exists"
+        if (!existingEmail.is_verified) {
+          await existingEmail.update({
+            full_name: `${first_name} ${last_name}`,
+            password,
+            phone_number: phone || existingEmail.phone_number,
+            user_type: data.user_type || existingEmail.user_type || "mobile",
+          });
+
+          const otpPayload = await startOtpChallenge(existingEmail);
+          return res.status(200).json({
+            code: "UNVERIFIED_ACCOUNT",
+            message:
+              "Account exists but is not verified. OTP resent — please verify to continue.",
+            ...otpPayload,
+            user: toSafeUser(existingEmail),
+          });
+        }
+
+        return res.status(409).json({
+          code: "EMAIL_TAKEN",
+          error: "Email already exists",
+        });
       }
 
       if (phone) {
@@ -112,7 +134,21 @@ const userController = {
           where: { phone_number: phone },
         });
         if (existingPhone) {
-          return res.status(409).json({ error: "Phone number already exists" });
+          if (!existingPhone.is_verified) {
+            // Phone owned by unverified user — if same email path already handled;
+            // different email: still block phone reuse
+            if (normalizeEmail(existingPhone.email) !== normalizedEmail) {
+              return res.status(409).json({
+                code: "PHONE_TAKEN",
+                error: "Phone number already exists",
+              });
+            }
+          } else {
+            return res.status(409).json({
+              code: "PHONE_TAKEN",
+              error: "Phone number already exists",
+            });
+          }
         }
       }
 
@@ -262,21 +298,22 @@ const userController = {
           .json({ error: "Invalid email/mobile or password" });
       }
 
-      // Admin / web portal: tokens directly (no OTP)
-      if (user.user_type !== "mobile") {
-        const authUser = await issueAuthTokens(user);
+      // Unverified mobile users must verify OTP before using the app
+      if (user.user_type === "mobile" && !user.is_verified) {
+        const otpPayload = await startOtpChallenge(user);
         return res.status(200).json({
-          message: "Login successful",
-          res: authUser,
+          code: "UNVERIFIED_ACCOUNT",
+          message: "Account is not verified. OTP sent — please verify to continue.",
+          ...otpPayload,
+          user: toSafeUser(user),
         });
       }
 
-      const otpPayload = await startOtpChallenge(user);
-
+      // Verified mobile (and web/admin): issue tokens — no OTP on every login
+      const authUser = await issueAuthTokens(user);
       return res.status(200).json({
-        message: "Credentials verified. Enter OTP to login.",
-        ...otpPayload,
-        user: toSafeUser(user),
+        message: "Login successful",
+        res: authUser,
       });
     } catch (error) {
       console.error("Login Error:", error);
@@ -355,11 +392,233 @@ const userController = {
     }
   },
 
+  /** POST /api/forgot-password — send OTP for password reset */
+  forgotPassword: async (req, res) => {
+    try {
+      const email = normalizeEmail(req.body.email);
+      if (!email) {
+        return res.status(400).json({ error: "Valid email is required" });
+      }
+
+      const user = await User.findOne({ where: { email } });
+
+      // Anti-enumeration: same message whether user exists or not
+      if (!user) {
+        return res.status(200).json({
+          success: true,
+          message: "If an account exists, an OTP has been sent.",
+          requires_otp: false,
+        });
+      }
+
+      const otpPayload = await startOtpChallenge(user);
+      return res.status(200).json({
+        success: true,
+        code: "PASSWORD_RESET_OTP",
+        message: "OTP sent. Enter OTP and your new password.",
+        ...otpPayload,
+      });
+    } catch (err) {
+      console.error("Forgot Password Error:", err);
+      return res
+        .status(err.status || 500)
+        .json({ error: err.message || "Failed to start password reset" });
+    }
+  },
+
+  /** POST /api/reset-password — verify OTP + set new password */
+  resetPassword: async (req, res) => {
+    try {
+      const { email, otp, hash, user_id, new_password } = req.body;
+
+      if (!new_password || String(new_password).length < 6) {
+        return res
+          .status(400)
+          .json({ error: "New password must be at least 6 characters" });
+      }
+
+      const checked = verifyOtpPayload({ email, otp, hash });
+      if (!checked.ok) {
+        return res.status(400).json({ error: checked.error });
+      }
+
+      const user = await User.findByPk(user_id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (normalizeEmail(user.email) !== checked.email) {
+        return res
+          .status(403)
+          .json({ error: "Email does not match this account" });
+      }
+
+      await user.update({
+        password: new_password,
+        is_verified: true,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Password updated successfully. Please login.",
+      });
+    } catch (err) {
+      console.error("Reset Password Error:", err);
+      return res
+        .status(500)
+        .json({ error: err.message || "Failed to reset password" });
+    }
+  },
+
+  /** POST /api/change-password — logged-in user */
+  changePassword: async (req, res) => {
+    try {
+      const userId = Number(req.user?.id);
+      const { current_password, new_password } = req.body;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      if (!current_password || !new_password) {
+        return res
+          .status(400)
+          .json({ error: "current_password and new_password are required" });
+      }
+      if (String(new_password).length < 6) {
+        return res
+          .status(400)
+          .json({ error: "New password must be at least 6 characters" });
+      }
+
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (user.password !== current_password) {
+        return res.status(401).json({ error: "Current password is incorrect" });
+      }
+
+      await user.update({ password: new_password });
+      return res.status(200).json({
+        success: true,
+        message: "Password changed successfully",
+      });
+    } catch (err) {
+      console.error("Change Password Error:", err);
+      return res
+        .status(500)
+        .json({ error: err.message || "Failed to change password" });
+    }
+  },
+
+  /** PUT /api/user/:id/profile — allowlisted self profile update */
+  updateProfile: async (req, res) => {
+    try {
+      const targetId = Number(req.params.id);
+      const requesterId = Number(req.user?.id);
+
+      if (!requesterId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      if (requesterId !== targetId) {
+        return res
+          .status(403)
+          .json({ error: "You can only update your own profile" });
+      }
+
+      const user = await User.findByPk(targetId);
+      if (!user) return res.status(404).json({ error: "User not found" });
+
+      const allowed = {};
+      if (req.body.full_name != null) {
+        const name = String(req.body.full_name).trim();
+        if (name.length < 2) {
+          return res
+            .status(400)
+            .json({ error: "Full name must be at least 2 characters" });
+        }
+        allowed.full_name = name;
+      }
+      if (req.body.phone_number != null) {
+        const phone = req.body.phone_number
+          ? normalizePhone(req.body.phone_number)
+          : null;
+        if (phone && phone.length !== 10) {
+          return res
+            .status(400)
+            .json({ error: "Phone number must be 10 digits" });
+        }
+        if (phone) {
+          const taken = await User.findOne({
+            where: {
+              phone_number: phone,
+              id: { [Op.ne]: targetId },
+            },
+          });
+          if (taken) {
+            return res
+              .status(409)
+              .json({ error: "Phone number already exists" });
+          }
+        }
+        allowed.phone_number = phone;
+      }
+      if (req.body.gender != null) {
+        allowed.gender = req.body.gender || null;
+      }
+      if (req.body.image_url != null) {
+        allowed.image_url = req.body.image_url || null;
+      }
+
+      await user.update(allowed);
+      return res.json({
+        success: true,
+        message: "Profile updated",
+        user: toSafeUser(user),
+      });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+
+  /** PATCH /api/users/:id/verify — admin can verify / unverify */
+  setUserVerified: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.params.id);
+      if (!user) return res.status(404).json({ error: "User not found" });
+
+      const isVerified =
+        req.body.is_verified === true ||
+        req.body.is_verified === "true" ||
+        req.body.is_verified === 1;
+
+      await user.update({ is_verified: Boolean(isVerified) });
+
+      return res.json({
+        success: true,
+        message: isVerified ? "User verified" : "User marked as unverified",
+        user: toSafeUser(user),
+      });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+
   updateUser: async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id);
       if (!user) return res.status(404).json({ error: "User not found" });
-      await user.update(req.body);
+
+      // Prevent casual clients from flipping verification / password via generic PUT
+      const {
+        password: _pw,
+        is_verified: _iv,
+        user_type: _ut,
+        ...safeBody
+      } = req.body || {};
+
+      await user.update(safeBody);
       res.json(toSafeUser(user));
     } catch (err) {
       res.status(400).json({ error: err.message });
