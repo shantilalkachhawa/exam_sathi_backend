@@ -7,6 +7,7 @@ const {
   deleteTempDirectory,
 } = require("./pdf.service");
 const { processPages, processPage, terminateWorker } = require("./imageOCR.service");
+const { extractScannedPdf } = require("./scannedPdf.service");
 
 function isHindi(language) {
   return ["hi", "hin", "hindi"].includes(String(language || "").toLowerCase());
@@ -35,11 +36,11 @@ async function extractTextFromPdfBuffer(buffer) {
 
 /**
  * Prefer embedded PDF text when it is real selectable text.
- * For Hindi scanned papers, force OCR (pdf-parse garbage mangled Devanagari).
+ * For Hindi / scanned papers: pdf.js render + Tesseract (no poppler required).
  */
 async function extractQuestionPaperText(file, { language = "en" } = {}) {
   if (!file?.path) {
-    return { text: "", source: "none", tempFolder: null };
+    return { text: "", source: "none", tempFolder: null, questions: null };
   }
 
   const extension = path.extname(file.originalname || file.path).toLowerCase();
@@ -52,12 +53,21 @@ async function extractQuestionPaperText(file, { language = "en" } = {}) {
       const text = await extractTextFromPdfBuffer(buffer);
 
       if (hindi) {
-        // Only trust embedded text if it has solid Devanagari content
         if (hasUsefulDevanagari(text) && text.length > 200) {
-          return { text, source: "pdf-parse", tempFolder: null };
+          return {
+            text,
+            source: "pdf-parse",
+            tempFolder: null,
+            questions: null,
+          };
         }
       } else if (text.length > 80) {
-        return { text, source: "pdf-parse", tempFolder: null };
+        return {
+          text,
+          source: "pdf-parse",
+          tempFolder: null,
+          questions: null,
+        };
       }
     } catch (err) {
       console.warn(
@@ -66,14 +76,37 @@ async function extractQuestionPaperText(file, { language = "en" } = {}) {
       );
     }
 
+    // Primary path for scanned / Hindi PDFs: pdf.js + Tesseract (works without poppler)
     try {
-      // Higher DPI for Hindi scanned booklets
+      console.log("Using pdfjs-ocr pipeline...");
+      const scanned = await extractScannedPdf({
+        pdfPath: file.path,
+        language: hindi ? "hi" : language,
+        forceTwoColumn: hindi ? true : null,
+      });
+      return {
+        text: scanned.text,
+        source: scanned.source,
+        tempFolder: scanned.tempFolder,
+        questions: scanned.questions,
+      };
+    } catch (pdfjsErr) {
+      console.warn(
+        "pdfjs-ocr failed, trying poppler fallback:",
+        pdfjsErr.message
+      );
+    }
+
+    // Fallback: poppler (requires pdftoppm installed on machine)
+    try {
       const pdf = await convertPDFToImages(file.path, {
         dpi: hindi ? 400 : 300,
       });
       tempFolder = pdf.outputDir;
-      const text = await processPages(pdf.pages, { language });
-      return { text, source: "ocr", tempFolder };
+      const text = await processPages(pdf.pages, {
+        language: hindi ? "hi" : language,
+      });
+      return { text, source: "ocr", tempFolder, questions: null };
     } catch (err) {
       if (tempFolder) await deleteTempDirectory(tempFolder);
       throw new Error("Question paper OCR failed: " + err.message);
@@ -82,8 +115,10 @@ async function extractQuestionPaperText(file, { language = "en" } = {}) {
 
   if ([".jpg", ".jpeg", ".png"].includes(extension)) {
     try {
-      const text = await processPage(file.path, { language });
-      return { text, source: "ocr-image", tempFolder: null };
+      const text = await processPage(file.path, {
+        language: hindi ? "hi" : language,
+      });
+      return { text, source: "ocr-image", tempFolder: null, questions: null };
     } finally {
       await terminateWorker();
     }

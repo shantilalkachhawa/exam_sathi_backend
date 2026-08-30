@@ -182,9 +182,8 @@ async function processPage(imagePath, { language = "en" } = {}) {
   try {
     await initWorker(language);
 
-    // Hindi tribal / GS papers are usually single-column — OCR full page.
-    // Only split when gutter detection says 2-column (typical English booklets).
-    const twoCol = soft ? false : await isTwoColumnLayout(imagePath);
+    // Split when gutter detection says 2-column (English + Hindi booklets)
+    const twoCol = await isTwoColumnLayout(imagePath);
 
     if (!twoCol) {
       console.log("OCR FULL PAGE");

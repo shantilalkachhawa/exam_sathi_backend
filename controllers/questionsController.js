@@ -22,6 +22,49 @@ const {
 const {
     loadAndApplyAnswerKey,
 } = require("../services/upload/answerKey.service");
+const {
+    parseClusterQuestions,
+} = require("../services/upload/scannedPdf.service");
+
+/** Read form-data / JSON body fields reliably (trim + case-insensitive). */
+function getBodyField(body, ...keys) {
+    if (!body || typeof body !== "object") return null;
+    for (const key of keys) {
+        if (Object.prototype.hasOwnProperty.call(body, key)) {
+            const val = body[key];
+            if (val !== undefined && val !== null && String(val).trim() !== "") {
+                return String(val).trim();
+            }
+        }
+    }
+    const lowerMap = {};
+    for (const [k, v] of Object.entries(body)) {
+        lowerMap[String(k).toLowerCase().trim()] = v;
+    }
+    for (const key of keys) {
+        const val = lowerMap[String(key).toLowerCase()];
+        if (val !== undefined && val !== null && String(val).trim() !== "") {
+            return String(val).trim();
+        }
+    }
+    return null;
+}
+
+function requireSubjectId(req) {
+    const subjectId = getBodyField(req.body, "subject_id", "subjectId");
+    if (!subjectId) {
+        const err = new Error(
+            "subject_id is required. Send Body → form-data → key 'subject_id' (Text), value e.g. 1. Also set file key to type File."
+        );
+        err.status = 400;
+        err.meta = {
+            receivedBodyKeys: Object.keys(req.body || {}),
+            hasFile: Boolean(req.files?.file?.[0] || req.file),
+        };
+        throw err;
+    }
+    return subjectId;
+}
 
 /**
  * Shared parse pipeline (no DB write).
@@ -49,10 +92,26 @@ async function parseUploadPipeline(req) {
         }
 
         const file = questionFile;
-        const defaultType = Number(req.body.type) || 1;
-        const language = req.body.language || "en";
+        const defaultType = Number(getBodyField(req.body, "type") || 1) || 1;
+        let language = getBodyField(req.body, "language") || "en";
 
-        const curated = await tryLoadCuratedQuestions(file, req.body.paper_id);
+        // Auto-detect Hindi when client sends en but filename suggests Hindi paper
+        const nameHint = String(file.originalname || "").toLowerCase();
+        if (
+            language === "en" &&
+            (nameHint.includes("hindi") ||
+                nameHint.includes("mppsc") ||
+                nameHint.includes("mppase") ||
+                nameHint.includes("हिंदी"))
+        ) {
+            language = "hi";
+            console.log("Language auto-switched to hi from filename hint");
+        }
+
+        const curated = await tryLoadCuratedQuestions(
+            file,
+            getBodyField(req.body, "paper_id", "paperId")
+        );
 
         if (curated) {
             questions = curated.questions;
@@ -68,17 +127,52 @@ async function parseUploadPipeline(req) {
         } else {
             const extracted = await extractQuestionPaperText(file, { language });
             tempFolder = extracted.tempFolder;
-            let extractedText = extracted.text;
             extractMeta = {
                 source: extracted.source,
                 accuracy:
-                    extracted.source === "pdf-parse" ? "high" : "best-effort",
+                    extracted.source === "pdf-parse"
+                        ? "high"
+                        : extracted.source === "pdfjs-ocr"
+                            ? "best-effort"
+                            : "best-effort",
             };
             console.log(`✅ Text extracted via ${extracted.source}`);
 
-            extractedText = normalizeOCR(extractedText);
-            questions = parseQuestions(extractedText, { defaultType });
-            console.log(`Questions Found : ${questions.length}`);
+            // pdfjs-ocr already returns structured questions for 2-col Hindi papers
+            if (
+                Array.isArray(extracted.questions) &&
+                extracted.questions.length > 0
+            ) {
+                questions = extracted.questions;
+                console.log(
+                    `Questions from pdfjs-ocr : ${questions.length}`
+                );
+            } else {
+                let extractedText = normalizeOCR(extracted.text || "");
+                questions = parseQuestions(extractedText, { defaultType });
+                console.log(`Questions Found (regex) : ${questions.length}`);
+
+                // Fallback cluster parser for Hindi / weak OCR text
+                if (
+                    questions.length < 2 &&
+                    (["hi", "hin", "hindi"].includes(
+                        String(language).toLowerCase()
+                    ) ||
+                        /[\u0900-\u097F]/.test(extractedText))
+                ) {
+                    const clustered = parseClusterQuestions(extractedText, {
+                        language,
+                        defaultType,
+                    });
+                    if (clustered.length > questions.length) {
+                        questions = clustered;
+                        extractMeta.parser = "cluster";
+                        console.log(
+                            `Questions Found (cluster) : ${questions.length}`
+                        );
+                    }
+                }
+            }
 
             if (!questions.length) {
                 const err = new Error("No questions found.");
@@ -107,6 +201,13 @@ async function parseUploadPipeline(req) {
             classified,
             language,
             defaultType,
+            subject_id: getBodyField(req.body, "subject_id", "subjectId"),
+            category_id: getBodyField(req.body, "category_id", "categoryId"),
+            sub_category_id: getBodyField(
+                req.body,
+                "sub_category_id",
+                "subCategoryId"
+            ),
         };
     } catch (error) {
         try {
@@ -148,12 +249,7 @@ async function cleanupUploadArtifacts({
 /** Preview only — scan PDF, return counts + questions, do NOT insert */
 const previewQuestionsFromPdf = async (req, res) => {
     try {
-        if (!req.body.subject_id) {
-            return res.status(400).json({
-                success: false,
-                message: "subject_id is required.",
-            });
-        }
+        requireSubjectId(req);
 
         const parsed = await parseUploadPipeline(req);
         await cleanupUploadArtifacts(parsed);
@@ -182,6 +278,7 @@ const previewQuestionsFromPdf = async (req, res) => {
         return res.status(error.status || 500).json({
             success: false,
             message: error.message,
+            ...(error.meta ? { debug: error.meta } : {}),
         });
     }
 };
@@ -189,22 +286,15 @@ const previewQuestionsFromPdf = async (req, res) => {
 /** Insert previously previewed questions (JSON body, no re-OCR) */
 const importParsedQuestions = async (req, res) => {
     try {
-        const {
-            questions,
-            subject_id,
-            category_id = null,
-            sub_category_id = null,
-            language = "en",
-            type = 1,
-            level = 1,
-        } = req.body || {};
-
-        if (!subject_id) {
-            return res.status(400).json({
-                success: false,
-                message: "subject_id is required.",
-            });
-        }
+        const subject_id = requireSubjectId(req);
+        const questions = req.body?.questions;
+        const category_id =
+            getBodyField(req.body, "category_id", "categoryId") || null;
+        const sub_category_id =
+            getBodyField(req.body, "sub_category_id", "subCategoryId") || null;
+        const language = getBodyField(req.body, "language") || "en";
+        const type = Number(getBodyField(req.body, "type") || 1) || 1;
+        const level = Number(getBodyField(req.body, "level") || 1) || 1;
 
         if (!Array.isArray(questions) || !questions.length) {
             return res.status(400).json({
@@ -234,8 +324,8 @@ const importParsedQuestions = async (req, res) => {
             sub_category_id,
             subject_id,
             created_by: req.user?.id || 1,
-            type: Number(type) || 1,
-            level: Number(level) || 1,
+            type,
+            level,
             language,
         });
 
@@ -255,22 +345,18 @@ const importParsedQuestions = async (req, res) => {
         });
     } catch (error) {
         console.error("Import Error:", error);
-        return res.status(500).json({
+        return res.status(error.status || 500).json({
             success: false,
             message: error.message,
+            ...(error.meta ? { debug: error.meta } : {}),
         });
     }
 };
 
-/** Legacy one-shot: parse + insert (kept for compatibility) */
+/** One-shot: parse PDF + insert */
 const createQuestion = async (req, res) => {
     try {
-        if (!req.body.subject_id) {
-            return res.status(400).json({
-                success: false,
-                message: "subject_id is required.",
-            });
-        }
+        const subject_id = requireSubjectId(req);
 
         const parsed = await parseUploadPipeline(req);
         const {
@@ -279,17 +365,19 @@ const createQuestion = async (req, res) => {
             extractMeta,
             language,
             defaultType,
+            category_id,
+            sub_category_id,
         } = parsed;
 
-        const level = Number(req.body.level) || 1;
+        const level = Number(getBodyField(req.body, "level") || 1) || 1;
 
         let result;
         try {
             result = await saveQuestions({
                 questions,
-                category_id: req.body.category_id || null,
-                sub_category_id: req.body.sub_category_id || null,
-                subject_id: req.body.subject_id || null,
+                category_id: category_id || null,
+                sub_category_id: sub_category_id || null,
+                subject_id,
                 created_by: req.user?.id || 1,
                 type: defaultType,
                 level,
@@ -313,8 +401,10 @@ const createQuestion = async (req, res) => {
                 extractMeta.source === "curated"
                     ? "Questions imported from curated paper (100% accuracy)."
                     : extractMeta.source === "pdf-parse"
-                      ? "Questions imported from PDF text."
-                      : "Questions imported via OCR (best-effort).",
+                        ? "Questions imported from PDF text."
+                        : extractMeta.source === "pdfjs-ocr"
+                            ? "Questions imported via Hindi/scanned PDF OCR."
+                            : "Questions imported via OCR (best-effort).",
             extract: extractMeta,
             answerKey: answerMeta,
             summary: {
@@ -332,6 +422,7 @@ const createQuestion = async (req, res) => {
         return res.status(error.status || 500).json({
             success: false,
             message: error.message,
+            ...(error.meta ? { debug: error.meta } : {}),
         });
     }
 };
@@ -387,7 +478,7 @@ const getQuestions = async (req, res) => {
                     attributes: ["id", "name", "code"],
                 },
             ],
-            order: [["id", "ASC"]],
+            order: [["id", "DESC"]],
             offset,
             limit: pageSize,
         });
