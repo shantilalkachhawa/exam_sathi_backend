@@ -66,6 +66,13 @@ function requireSubjectId(req) {
     return subjectId;
 }
 
+function isMostlyDevanagari(text) {
+    const chars = String(text || "").replace(/\s/g, "");
+    if (chars.length < 40) return false;
+    const dev = (chars.match(/[\u0900-\u097F]/g) || []).length;
+    return dev / chars.length >= 0.25;
+}
+
 /**
  * Shared parse pipeline (no DB write).
  */
@@ -138,6 +145,10 @@ async function parseUploadPipeline(req) {
             };
             console.log(`✅ Text extracted via ${extracted.source}`);
 
+            if (isMostlyDevanagari(extracted.text)) {
+                language = "hi";
+            }
+
             // pdfjs-ocr already returns structured questions for 2-col Hindi papers
             if (
                 Array.isArray(extracted.questions) &&
@@ -178,6 +189,14 @@ async function parseUploadPipeline(req) {
                 const err = new Error("No questions found.");
                 err.status = 400;
                 throw err;
+            }
+
+            // Ensure Hindi papers store language=hi in DB
+            if (language === "hi" || isMostlyDevanagari(extracted.text)) {
+                questions = questions.map((q) => ({
+                    ...q,
+                    language: "hi",
+                }));
             }
         }
 

@@ -4,6 +4,9 @@ const fs = require("fs-extra");
 const { createWorker } = require("tesseract.js");
 
 const { preprocessImage } = require("../../utils/imagePreprocess");
+const { reconstructTextFromOcrData } = require("./ocrLayout.service");
+const { normalizeHindiOcrText } = require("./hindiTextNormalize.service");
+const { cleanOCRText } = require("../../utils/regex");
 
 let worker = null;
 let workerLang = null;
@@ -74,13 +77,25 @@ async function terminateWorker() {
   }
 }
 
-async function recognize(imagePath) {
+async function recognize(imagePath, { language = "en" } = {}) {
   try {
     const { data } = await worker.recognize(imagePath);
+    const hindi = isHindi(language);
+    let text = String(data.text || "").trim();
+    if (!text || (hindi && !/\s/.test(text.slice(0, 200)))) {
+      text = reconstructTextFromOcrData(data) || text;
+    }
+    if (hindi) {
+      text = normalizeHindiOcrText(text);
+    }
+    text = text
+      .split("\n")
+      .map((line) => cleanOCRText(line))
+      .join("\n");
     console.log(
       `${path.basename(imagePath)} Confidence : ${data.confidence}`
     );
-    return data.text;
+    return text;
   } catch (error) {
     console.error(`OCR Error : ${imagePath}`, error.message);
     return "";
@@ -189,16 +204,16 @@ async function processPage(imagePath, { language = "en" } = {}) {
       console.log("OCR FULL PAGE");
       const full = await preprocessFullPage(imagePath, soft);
       temps.push(full);
-      return await recognize(full);
+      return await recognize(full, { language });
     }
 
     const images = await splitPage(imagePath, { soft });
     temps.push(images.left, images.right);
 
     console.log("OCR LEFT");
-    const leftText = await recognize(images.left);
+    const leftText = await recognize(images.left, { language });
     console.log("OCR RIGHT");
-    const rightText = await recognize(images.right);
+    const rightText = await recognize(images.right, { language });
 
     return `${leftText}\n${rightText}`;
   } catch (error) {

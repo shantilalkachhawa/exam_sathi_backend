@@ -46,14 +46,13 @@ const DEVANAGARI_OPTION_MAP = {
 
 function repairDevanagariSpacing(text) {
   return String(text || "")
-    // Never keep a space before matras / vowel signs / nukta / anusvara
+    // Join dependent vowel signs (matras) to previous consonant
     .replace(/\s+(?=[\u093A-\u094F\u0901-\u0903\u093C])/gu, "")
-    // Never split around virama (्) — breaks conjuncts like प्र / स्क
+    // Join virama (halant) — keeps conjuncts like प्र / स्क / स्थिति
     .replace(/([\u0900-\u097F])\s+(\u094D)/gu, "$1$2")
-    .replace(/(\u094D)\s+([\u0900-\u097F])/gu, "$1$2")
-    // Common OCR: space after consonant before next consonant inside a word
-    // Only collapse when previous char is a matra or virama (already mid-cluster)
-    .replace(/([\u093A-\u094F\u094D])\s+([\u0900-\u097F])/gu, "$1$2");
+    .replace(/(\u094D)\s+([\u0900-\u097F])/gu, "$1$2");
+  // NOTE: Do NOT remove space between a matra and the next consonant —
+  // that glues separate Hindi words (के + अनुसार → केअनुसार).
 }
 
 function cleanOCRText(text) {

@@ -6,6 +6,10 @@ const { createWorker } = require("tesseract.js");
 const { v4: uuid } = require("uuid");
 const { cleanOCRText } = require("../../utils/regex");
 const { normalizeParsedQuestion } = require("./questionTypes");
+const { reconstructTextFromOcrData } = require("./ocrLayout.service");
+const {
+  normalizeHindiOcrText,
+} = require("./hindiTextNormalize.service");
 
 const RENDER_SCALE = 4;
 const PREPROCESS_WIDTH = 2400;
@@ -189,14 +193,25 @@ function fixLeadingQuestionNumber(line) {
   return line;
 }
 
-function normalizeLines(raw) {
-  return String(raw || "")
+function normalizeLines(raw, { hindi = true } = {}) {
+  const text = hindi ? normalizeHindiOcrText(raw) : String(raw || "");
+  return text
     .replace(/\r/g, "\n")
     .split("\n")
     .map((l) => cleanOCRText(l))
     .map(fixLeadingQuestionNumber)
     .map((l) => l.replace(/\$[^ \n]{0,24}/g, "").trim())
     .filter((l) => !isNoiseLine(l));
+}
+
+async function recognizeImage(worker, imagePath, { hindi = true } = {}) {
+  const { data } = await worker.recognize(imagePath);
+  // Tesseract data.text usually preserves word spaces better than bbox rebuild
+  let raw = String(data.text || "").trim();
+  if (!raw || (hindi && !/\s/.test(raw.slice(0, 200)))) {
+    raw = reconstructTextFromOcrData(data) || raw;
+  }
+  return normalizeLines(raw, { hindi });
 }
 
 function parseOptionLine(line) {
@@ -381,8 +396,7 @@ async function extractScannedPdf({
           ["left", cols.left],
           ["right", cols.right],
         ]) {
-          const { data } = await worker.recognize(img);
-          const lines = normalizeLines(data.text || "");
+          const lines = await recognizeImage(worker, img, { hindi });
           textChunks.push(lines.join("\n"));
           const lastNo = lastQuestionNo(questionSets);
           const hinted = parseQuestionsFromLines(lines, {
@@ -395,8 +409,7 @@ async function extractScannedPdf({
         }
       } else {
         const full = await preprocessFull(pagePng, outDir, pageNumber);
-        const { data } = await worker.recognize(full);
-        const lines = normalizeLines(data.text || "");
+        const lines = await recognizeImage(worker, full, { hindi });
         textChunks.push(lines.join("\n"));
         const lastNo = lastQuestionNo(questionSets);
         questionSets.push(
@@ -426,7 +439,7 @@ async function extractScannedPdf({
  * Parse already-OCR'd text with cluster MCQ parser (Hindi booklet friendly).
  */
 function parseClusterQuestions(text, { language = "hi", defaultType = 1 } = {}) {
-  const lines = normalizeLines(text);
+  const lines = normalizeLines(text, { hindi: isHindi(language) });
   const raw = parseQuestionsFromLines(lines, { startNumberHint: 1 });
   return mergeQuestions([raw]).map((q) =>
     normalizeParsedQuestion(
